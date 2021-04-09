@@ -22,7 +22,7 @@ def read_file(genome):
                     current_sequence = ""
         if current_sequence:
             sequence.append(current_sequence)
-        return sequence
+    return sequence
 
 # Parse sequences into alleles with corresponding window size
 def parse_to_allele(sequence,window_size):
@@ -46,7 +46,6 @@ def pairwise_difference(first_sequence,second_sequence,threshold):
 # Calculate the nucleotide diversity of a given allele set
 def nucleotide_diversity(sequence,threshold):
     pi_value = 0
-    # TODO: more implements of the algorithm
     allele_frequency = 1/len(sequence)
     for first_sequence in sequence:
         for second_sequence in sequence:
