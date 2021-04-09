@@ -47,10 +47,10 @@ def pairwise_difference(first_sequence,second_sequence,threshold):
 def nucleotide_diversity(sequence,threshold):
     pi_value = 0
     # TODO: more implements of the algorithm
-    frequncy = 1/len(sequence)
+    allele_frequency = 1/len(sequence)
     for first_sequence in sequence:
         for second_sequence in sequence:
-            pi_value += pairwise_difference(first_sequence,second_sequence,threshold)*frequncy
+            pi_value += pairwise_difference(first_sequence,second_sequence,threshold)*allele_frequency**2
     return pi_value
 
 if __name__ == "__main__":
