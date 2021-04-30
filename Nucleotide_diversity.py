@@ -1,4 +1,6 @@
 # This file contains the calculation of nucleotide diversity.
+import math
+
 import numpy as np
 import warnings
 import argparse
@@ -29,10 +31,11 @@ def pairwise_difference(first_sequence, second_sequence, threshold):  # Single n
 
 def nucleotide_diversity(sequences, threshold):  # The nucleotide diversity of a population
     pi_value = 0
-    allele_frequency = 1/len(sequences)
+    n = len(sequences)
     for first_sequence in sequences:
         for second_sequence in sequences:
-            pi_value += pairwise_difference(first_sequence, second_sequence, threshold)*allele_frequency**2
+            pi_value += pairwise_difference(first_sequence, second_sequence, threshold)
+    pi_value = pi_value/math.comb(n, 2)
     return pi_value
 
 
