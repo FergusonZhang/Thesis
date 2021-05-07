@@ -1,6 +1,6 @@
 # This is a backup file for unused algorithms
 
-# Parse each sequence into pieces with fixed length
+
 def parse_to_allele(sequence, window_size):
     allele = []
     for i, sequence in enumerate(sequence):
