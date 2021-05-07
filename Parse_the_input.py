@@ -1,12 +1,13 @@
 # This program parses VCF file with FSATA file.
 import argparse
+import vcf
 
 
 def file_parser(filename):
     filenames = filename.split(".")
     file_type = filenames[1]
     if file_type == "fas":
-        print("FASTA file!")
+        print("This is a FASTA file.")
         sequence = []
         with open(filename) as f:
             current_sequence = ""
@@ -20,11 +21,9 @@ def file_parser(filename):
             if current_sequence:
                 sequence.append(current_sequence)
         return sequence
-
     elif file_type == "vcf":
-        print("VCF file!")
+        print("This is a VCF file.")
         # TODO: handle the VCF file.
-
     else:
         print("Unrecognized type of input!", type)
 
