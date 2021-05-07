@@ -1,4 +1,4 @@
-# This file contains the calculation of nucleotide diversity.
+# This file contains various analysis methods
 import numpy as np
 import warnings
 from Parse_the_input import *
@@ -6,6 +6,7 @@ from pprint import pprint
 warnings.filterwarnings("ignore")
 
 
+# Calculate the single nucleotide polymorphism (SNP) between two given sequences.
 def pairwise_difference(first_sequence, second_sequence):
     count = np.sum(nucleotide_A != nucleotide_B for nucleotide_A, nucleotide_B
                    in zip(first_sequence, second_sequence))\
@@ -13,6 +14,7 @@ def pairwise_difference(first_sequence, second_sequence):
     return count
 
 
+# A function used to find nCr without using the math package
 def comb(n, k):
     if 0 <= k <= n:
         ntok = 1
@@ -26,6 +28,7 @@ def comb(n, k):
         return 0
 
 
+# Calculate the nucleotide diversity of a population based on the SNP.
 def nucleotide_diversity(sequences):
     pi_value = 0
     for first_sequence in sequences:
@@ -35,11 +38,13 @@ def nucleotide_diversity(sequences):
     return pi_value
 
 
+# A function that returns the number of segregating sites of a genome sequence.
 def get_segregating_sites(sequences):
     # TODO: find the number of segregating sites
     return 4
 
 
+# Calculate the Tajima's D using nucleotide diversity.
 def tajima_test(sequences):
     n = len(sequences)
     a_1 = 0
@@ -59,6 +64,7 @@ def tajima_test(sequences):
     return tajima_score
 
 
+# The main function.
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Genome reader.')
     parser.add_argument(dest='file_name', help='Please input the genome filename.')

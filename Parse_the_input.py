@@ -3,6 +3,7 @@ import argparse
 import vcf
 
 
+# Handle different inputs based on their formats
 def file_parser(filename):
     filenames = filename.split(".")
     file_type = filenames[1]
@@ -21,13 +22,16 @@ def file_parser(filename):
             if current_sequence:
                 sequence.append(current_sequence)
         return sequence
+
     elif file_type == "vcf":
         print("This is a VCF file.")
         # TODO: handle the VCF file.
+
     else:
         print("Unrecognized type of input!", type)
 
 
+# The main function.
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Genome reader.')
     parser.add_argument(dest='file_name', help='Please input the genome filename.')
