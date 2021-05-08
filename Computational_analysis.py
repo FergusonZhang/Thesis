@@ -8,8 +8,7 @@ warnings.filterwarnings("ignore")
 
 # Read sequences from different files
 def read_sequences(file_name):
-    name = file_name.split(".")
-    file_type = name[1]
+    file_type = file_name.split(".")[1]
     if file_type == "fas":
         sequences = []
         with open(file_name) as f:
@@ -25,7 +24,6 @@ def read_sequences(file_name):
                 sequences.append(current_sequence)
         return sequences
     elif file_type == "vcf":
-        # TODO: handle the VCF file.
         return
     else:
         print("Unrecognized file format!", type)
@@ -63,13 +61,13 @@ def nucleotide_diversity(sequences):
 
 # Count the number of segregating site.
 def segregating_site(sequences):
-    current_list = []
     result_list = []
     for first_sequence in sequences:
         for second_sequence in sequences:
-            current_list = [index for index in range(len(first_sequence)) if
+            upper_boundary = min(len(first_sequence), len(second_sequence))
+            current_list = [index for index in range(upper_boundary) if
                             first_sequence[index] != second_sequence[index]]
-            result_list = sorted(np.unique(current_list + result_list))
+            result_list = sorted(np.unique(result_list + current_list))
     return len(result_list)
 
 
@@ -88,13 +86,11 @@ def tajima_test(sequences):
     e_1 = c_1/a_1
     e_2 = c_2/(a_1**2 + a_2)
     s = segregating_site(sequences)
-    if s == 0:
-        return 0
     k = nucleotide_diversity(sequences)
-    total_length = 0
+    avg_length = 0
     for sequence in sequences:
-        total_length += len(sequence)
-    return (k - s/a_1)/((np.sqrt(e_1*s + e_2*s*(s - 1)))*total_length/n)
+        avg_length += len(sequence)/n
+    return (k - s/a_1)/((np.sqrt(e_1*s + e_2*s*(s - 1)))*avg_length)
 
 
 # Parse sequence into pieces with fixed length
@@ -115,25 +111,37 @@ def parse_into_pieces(sequences, window_size):
 # The main function.
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Balancing selection detector.')
-    parser.add_argument(dest='file_name', help='Please input the filename.')
+    parser.add_argument(dest='file_name', help='Please enter the filename.')
+    parser.add_argument(dest='Window_size', help='Please enter the window size.', type=int)
     args = parser.parse_args()
+
     print("The input file is: " + str(args.file_name))
     Sequences = read_sequences(args.file_name)
+
     print("The sequences are: ")
     ppt.pprint(Sequences)
+
     Pi_value = nucleotide_diversity(Sequences)
     print("The nucleotide diversity is: " + str(Pi_value))
+
     Tajima_D = tajima_test(Sequences)
     print("The Tajima's D is: " + str(Tajima_D))
 
-    Parsed_sequences = parse_into_pieces(Sequences, 5)
+    Parsed_sequences = parse_into_pieces(Sequences, args.Window_size)
     print("The parsed sequences are: ")
     ppt.pprint(Parsed_sequences)
+
     Bp_position = []
     Tajima_scores = []
     for i in range(len(Parsed_sequences[0])):
-        Bp_position.append(i*5 + 3)
-        Tajima_scores.append(tajima_test(Parsed_sequences[i]))
+        current_column = []
+        for j in range(len(Parsed_sequences)):
+            current_column.append(Parsed_sequences[j][i])
+        if len(current_column[0]) < args.Window_size:
+            Bp_position.append(i*args.Window_size + (len(current_column[0]) + 1)//2)
+        else:
+            Bp_position.append(i*args.Window_size + (args.Window_size + 1)//2)
+        Tajima_scores.append(tajima_test(current_column))
     print("The score vs. position is: ")
     ppt.pprint(Bp_position)
     ppt.pprint(Tajima_scores)
