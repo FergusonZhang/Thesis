@@ -3,6 +3,7 @@ import argparse
 import numpy as np
 import warnings
 import pprint as ppt
+import matplotlib.pyplot as plt
 warnings.filterwarnings("ignore")
 
 
@@ -142,6 +143,12 @@ if __name__ == "__main__":
         else:
             Bp_position.append(i*args.Window_size + (args.Window_size + 1)//2)
         Tajima_scores.append(tajima_test(current_column))
-    print("The score vs. position is: ")
-    ppt.pprint(Bp_position)
-    ppt.pprint(Tajima_scores)
+
+    plt.plot(Bp_position, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
+             marker='.', markerfacecolor='blue', markersize=5)
+    plt.xlim(0, max(Bp_position))
+    plt.ylim(-1.5*max(Tajima_scores), 1.5*max(Tajima_scores))
+    plt.xlabel("Position")
+    plt.ylabel("Tajima's D")
+    plt.title("The Tajima's D vs. position (window size = " + str(args.Window_size) + ")")
+    plt.show()
