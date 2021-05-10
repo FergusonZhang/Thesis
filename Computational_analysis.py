@@ -7,7 +7,7 @@ import pprint as ppt
 warnings.filterwarnings("ignore")
 
 
-# Read sequences from different files
+# Read sequences from different files.
 def read_sequences(file_name):
     file_type = file_name.split(".")[1]
     if file_type == "fas":
@@ -25,19 +25,20 @@ def read_sequences(file_name):
                 sequences.append(current_sequence)
         return sequences
     elif file_type == "vcf":
+        # TODO: Implement the VCF handler.
         return
     else:
         print("Unrecognized file format!", type)
         return
 
 
-# Count single nucleotide polymorphism between two sequences.
-def pairwise_difference(first_sequence, second_sequence):
+# Count single nucleotide polymorphisms.
+def get_pairwise_differences(first_sequence, second_sequence):
     return np.sum(x != y for x, y in zip(first_sequence, second_sequence))\
             + abs(len(first_sequence) - len(second_sequence))
 
 
-# Calculate nCr without using the math package
+# Calculate nCr.
 def comb(n, k):
     if 0 <= k <= n:
         ntok = 1
@@ -51,29 +52,29 @@ def comb(n, k):
         return 0
 
 
-# Calculate nucleotide diversity using pairwise difference.
-def nucleotide_diversity(sequences):
+# Calculate nucleotide diversity.
+def get_nucleotide_diversity(sequences):
     pi_value = 0
     for first_sequence in sequences:
         for second_sequence in sequences:
-            pi_value += pairwise_difference(first_sequence, second_sequence)
+            pi_value += get_pairwise_differences(first_sequence, second_sequence)
     return pi_value/(2*comb(len(sequences), 2))
 
 
-# Count the number of segregating site.
-def segregating_site(sequences):
-    result_list = []
+# Record segregating sites.
+def get_segregating_sites(sequences):
+    sites = []
     for first_sequence in sequences:
         for second_sequence in sequences:
             upper_boundary = min(len(first_sequence), len(second_sequence))
             current_list = [index for index in range(upper_boundary) if
                             first_sequence[index] != second_sequence[index]]
-            result_list = sorted(np.unique(result_list + current_list))
-    return len(result_list)
+            sites = sorted(np.unique(sites + current_list))
+    return sites
 
 
-# Calculate Tajima's D using nucleotide diversity.
-def tajima_test(sequences):
+# Calculate Tajima's D.
+def get_tajimas_d(sequences):
     n = len(sequences)
     a_1 = 0
     a_2 = 0
@@ -86,8 +87,8 @@ def tajima_test(sequences):
     c_2 = b_2 - (n + 2)/(a_1*n) + a_2/a_1**2
     e_1 = c_1/a_1
     e_2 = c_2/(a_1**2 + a_2)
-    s = segregating_site(sequences)
-    k = nucleotide_diversity(sequences)
+    s = len(get_segregating_sites(sequences))
+    k = get_nucleotide_diversity(sequences)
     avg_length = 0
     for sequence in sequences:
         avg_length += len(sequence)/n
@@ -97,7 +98,7 @@ def tajima_test(sequences):
         return (k - s/a_1)/((np.sqrt(e_1*s + e_2*s*(s - 1)))*avg_length)
 
 
-# Parse sequence into pieces with fixed length
+# Parse sequence into pieces with fixed length.
 def parse_into_pieces(sequences, window_size):
     pieces = []
     for index_1, sequence in enumerate(sequences):
@@ -110,6 +111,23 @@ def parse_into_pieces(sequences, window_size):
         if sequence[num*window_size:]:
             pieces[index_1].append(sequence[num*window_size:])
     return pieces
+
+
+# Calculate the Tajima's D for each piece
+def analyze_pieces(parsed_sequences, window_size):
+    positions = []
+    scores = []
+    for column in range(len(parsed_sequences[0])):
+        current = []
+        for row in range(len(parsed_sequences)):
+            current.append(parsed_sequences[row][column])
+        if not np.isnan(get_tajimas_d(current)):
+            scores.append(get_tajimas_d(current))
+            if len(current[0]) < window_size:
+                positions.append(column*window_size + (len(current[0]) + 1)//2)
+            else:
+                positions.append(column*window_size + (window_size + 1)//2)
+    return [positions, scores]
 
 
 # The main function.
@@ -125,33 +143,20 @@ if __name__ == "__main__":
     print("The sequences are: ")
     ppt.pprint(Sequences)
 
-    Pi_value = nucleotide_diversity(Sequences)
+    Pi_value = get_nucleotide_diversity(Sequences)
     print("The nucleotide diversity is: " + str(Pi_value))
 
-    Tajima_D = tajima_test(Sequences)
+    Tajima_D = get_tajimas_d(Sequences)
     print("The Tajima's D is: " + str(Tajima_D))
 
     Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
     print("The parsed sequences are: ")
     ppt.pprint(Parsed_sequences)
 
-    Bp_position = []
-    Tajima_scores = []
-    for i in range(len(Parsed_sequences[0])):
-        current_column = []
-        for j in range(len(Parsed_sequences)):
-            current_column.append(Parsed_sequences[j][i])
-        if len(current_column[0]) < args.window_size:
-            Bp_position.append(i*args.window_size + (len(current_column[0]) + 1)//2)
-        else:
-            Bp_position.append(i*args.window_size + (args.window_size + 1)//2)
-        if not np.isnan(tajima_test(current_column)):
-            Tajima_scores.append(tajima_test(current_column))
-
-    # Plot the figure
-    plt.plot(Bp_position, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
+    [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
+    plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
              marker='.', markerfacecolor='blue', markersize=5)
-    plt.xlim(0, max(Bp_position))
+    plt.xlim(0, max(Bp_positions))
     plt.ylim(-1.5*max(Tajima_scores), 1.5*max(Tajima_scores))
     plt.xlabel("Position")
     plt.ylabel("Tajima's D")
