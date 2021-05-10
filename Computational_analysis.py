@@ -1,9 +1,9 @@
 # This file contains computational analysis methods
 import argparse
+import matplotlib.pyplot as plt
 import numpy as np
 import warnings
 import pprint as ppt
-import matplotlib.pyplot as plt
 warnings.filterwarnings("ignore")
 
 
@@ -91,7 +91,10 @@ def tajima_test(sequences):
     avg_length = 0
     for sequence in sequences:
         avg_length += len(sequence)/n
-    return (k - s/a_1)/((np.sqrt(e_1*s + e_2*s*(s - 1)))*avg_length)
+    if (np.sqrt(e_1*s + e_2*s*(s - 1))) == 0:
+        return float("nan")
+    else:
+        return (k - s/a_1)/((np.sqrt(e_1*s + e_2*s*(s - 1)))*avg_length)
 
 
 # Parse sequence into pieces with fixed length
@@ -105,7 +108,7 @@ def parse_into_pieces(sequences, window_size):
             if new_piece:
                 pieces[index_1].append(new_piece)
         if sequence[num*window_size:]:
-            pieces[index_1].append(sequence[num * window_size:])
+            pieces[index_1].append(sequence[num*window_size:])
     return pieces
 
 
@@ -113,7 +116,7 @@ def parse_into_pieces(sequences, window_size):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Balancing selection detector.')
     parser.add_argument(dest='file_name', help='Please enter the filename.')
-    parser.add_argument(dest='Window_size', help='Please enter the window size.', type=int)
+    parser.add_argument(dest='window_size', help='Please enter the window size.', type=int)
     args = parser.parse_args()
 
     print("The input file is: " + str(args.file_name))
@@ -128,7 +131,7 @@ if __name__ == "__main__":
     Tajima_D = tajima_test(Sequences)
     print("The Tajima's D is: " + str(Tajima_D))
 
-    Parsed_sequences = parse_into_pieces(Sequences, args.Window_size)
+    Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
     print("The parsed sequences are: ")
     ppt.pprint(Parsed_sequences)
 
@@ -138,17 +141,19 @@ if __name__ == "__main__":
         current_column = []
         for j in range(len(Parsed_sequences)):
             current_column.append(Parsed_sequences[j][i])
-        if len(current_column[0]) < args.Window_size:
-            Bp_position.append(i*args.Window_size + (len(current_column[0]) + 1)//2)
+        if len(current_column[0]) < args.window_size:
+            Bp_position.append(i*args.window_size + (len(current_column[0]) + 1)//2)
         else:
-            Bp_position.append(i*args.Window_size + (args.Window_size + 1)//2)
-        Tajima_scores.append(tajima_test(current_column))
+            Bp_position.append(i*args.window_size + (args.window_size + 1)//2)
+        if not np.isnan(tajima_test(current_column)):
+            Tajima_scores.append(tajima_test(current_column))
 
+    # Plot the figure
     plt.plot(Bp_position, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
              marker='.', markerfacecolor='blue', markersize=5)
     plt.xlim(0, max(Bp_position))
     plt.ylim(-1.5*max(Tajima_scores), 1.5*max(Tajima_scores))
     plt.xlabel("Position")
     plt.ylabel("Tajima's D")
-    plt.title("The Tajima's D vs. position (window size = " + str(args.Window_size) + ")")
+    plt.title("The Tajima's D vs. position (window size = " + str(args.window_size) + ")")
     plt.show()
