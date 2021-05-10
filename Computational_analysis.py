@@ -47,7 +47,7 @@ def comb(n, k):
             ntok *= n
             ktok *= t
             n -= 1
-        return ntok // ktok
+        return ntok//ktok
     else:
         return 0
 
