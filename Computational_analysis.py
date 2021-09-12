@@ -4,14 +4,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import warnings
 import pprint as ppt
+import vcf
 warnings.filterwarnings("ignore")
 
 
 # Read sequences from different files.
 def read_sequences(file_name):
     file_type = file_name.split(".")[1]
+    sequences = []
     if file_type == "fas":
-        sequences = []
         with open(file_name) as f:
             current_sequence = ""
             for line in f:
@@ -25,7 +26,7 @@ def read_sequences(file_name):
                 sequences.append(current_sequence)
         return sequences
     elif file_type == "vcf":
-        # TODO: Implement the VCF handler.
+        vcf.reader = vcf.Reader(open('file_name', 'r'))
         return
     else:
         print("Unrecognized file format!", type)
