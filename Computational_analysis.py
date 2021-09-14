@@ -13,6 +13,7 @@ def read_sequences(file_name):
     file_type = file_name.split(".")[1]
     sequences = []
     current_sequence = ""
+    second_sequence = ""
     if file_type == "fas":
         with open(file_name) as f:
             for line in f:
@@ -30,9 +31,12 @@ def read_sequences(file_name):
         for sample_name in reader.samples:
             for record in reader:
                 allele = record.genotype(sample_name).gt_bases
-                current_sequence = current_sequence + allele[2]
+                current_sequence = current_sequence + allele[0]
+                second_sequence = second_sequence + allele[2]
             sequences.append(current_sequence)
+            sequences.append(second_sequence)
             current_sequence = ""
+            second_sequence = ""
         return sequences
     else:
         print("Unrecognized file format!", type)
