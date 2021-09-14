@@ -30,7 +30,7 @@ def read_sequences(file_name):
         for sample_name in reader.samples:
             for record in reader:
                 allele = record.genotype(sample_name).gt_bases
-                current_sequence = current_sequence + allele[0]
+                current_sequence = current_sequence + allele[2]
             sequences.append(current_sequence)
             current_sequence = ""
         return sequences
