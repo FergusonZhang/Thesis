@@ -12,9 +12,9 @@ warnings.filterwarnings("ignore")
 def read_sequences(file_name):
     file_type = file_name.split(".")[1]
     sequences = []
+    current_sequence = ""
     if file_type == "fas":
         with open(file_name) as f:
-            current_sequence = ""
             for line in f:
                 if line[0] != ">":
                     current_sequence = current_sequence + line.strip()
@@ -26,8 +26,14 @@ def read_sequences(file_name):
                 sequences.append(current_sequence)
         return sequences
     elif file_type == "vcf":
-        vcf.reader = vcf.Reader(open('file_name', 'r'))
-        return
+        reader = vcf.Reader(open('file_name', 'r'))
+        for sample_name in reader.samples:
+            for record in reader:
+                allele = record.genotype(sample_name).gt_bases
+                current_sequence = current_sequence + allele[0]
+            sequences.append(current_sequence)
+            current_sequence = ""
+        return sequences
     else:
         print("Unrecognized file format!", type)
         return
@@ -162,4 +168,4 @@ if __name__ == "__main__":
     plt.xlabel("Position")
     plt.ylabel("Tajima's D")
     plt.title("The Tajima's D vs. position (window size = " + str(args.window_size) + ")")
-    plt.show()
+    plt.savefig("Tajima's D.png")
