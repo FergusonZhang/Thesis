@@ -5,6 +5,8 @@ import numpy as np
 import warnings
 import pprint as ppt
 import vcf
+import pickle
+import os
 warnings.filterwarnings("ignore")
 
 
@@ -149,7 +151,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     print("The input file is: " + str(args.file_name))
-    Sequences = read_sequences(args.file_name)
+    if os.path.isfile("sequence_list.pkl"):
+        pkl_file = open("sequence_list.pkl", "rb")
+        Sequences = pickle.load(pkl_file)
+    else:
+        Sequences = read_sequences(args.file_name)
+        with open("sequence_list.pkl", "wb") as p:
+            pickle.dump("sequence_list", p)
 
     print("The sequences are: ")
     ppt.pprint(Sequences)
