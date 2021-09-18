@@ -159,8 +159,8 @@ if __name__ == "__main__":
         with open(f"{args.file_name}.pkl", "wb") as p:
             pickle.dump(Sequences, p)
 
-    print("The sequences are: ")
-    ppt.pprint(Sequences)
+    # print("The sequences are: ")
+    # ppt.pprint(Sequences)
 
     Pi_value = get_nucleotide_diversity(Sequences)
     print("The nucleotide diversity is: " + str(Pi_value))
@@ -169,8 +169,8 @@ if __name__ == "__main__":
     print("The Tajima's D is: " + str(Tajima_D))
 
     Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
-    print("The parsed sequences are: ")
-    ppt.pprint(Parsed_sequences)
+    # print("The parsed sequences are: ")
+    # ppt.pprint(Parsed_sequences)
 
     [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
     plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
