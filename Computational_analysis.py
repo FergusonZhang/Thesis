@@ -1,4 +1,4 @@
-# This file contains computational analysis methods
+# Tajima's D analysis
 import argparse
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,7 +10,7 @@ import os
 warnings.filterwarnings("ignore")
 
 
-# Read sequences from different files.
+# Read sequences from different file types.
 def read_sequences(file_name):
     file_type = file_name.split(".")[1]
     sequences = []
@@ -169,6 +169,7 @@ if __name__ == "__main__":
     print("The Tajima's D is: " + str(Tajima_D))
 
     Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
+    # print("The input window size is: " + str(args.window_size))
     # print("The parsed sequences are: ")
     # ppt.pprint(Parsed_sequences)
 
@@ -179,5 +180,5 @@ if __name__ == "__main__":
     plt.ylim(-1.5*max(Tajima_scores), 1.5*max(Tajima_scores))
     plt.xlabel("Position")
     plt.ylabel("Tajima's D")
-    plt.title("The Tajima's D vs. position (window size = " + str(args.window_size) + ")")
-    plt.savefig("Tajima's D.png")
+    plt.title(f"{args.file_name} Balancing Selection Analysis")
+    plt.savefig(f"{args.file_name} Tajima's D.png")
