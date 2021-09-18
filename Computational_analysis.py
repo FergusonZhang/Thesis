@@ -152,12 +152,12 @@ if __name__ == "__main__":
 
     print("The input file is: " + str(args.file_name))
     if os.path.isfile("sequence_list.pkl"):
-        pkl_file = open("sequence_list.pkl", "rb")
+        pkl_file = open(f"{args.file_name}.pkl", "rb")
         Sequences = pickle.load(pkl_file)
     else:
         Sequences = read_sequences(args.file_name)
-        with open("sequence_list.pkl", "wb") as p:
-            pickle.dump("sequence_list", p)
+        with open(f"{args.file_name}.pkl", "wb") as p:
+            pickle.dump(Sequences, p)
 
     print("The sequences are: ")
     ppt.pprint(Sequences)
