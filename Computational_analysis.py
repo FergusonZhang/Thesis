@@ -136,7 +136,7 @@ def analyze_pieces(parsed_sequences, window_size):
             try:
                 current.append(parsed_sequences[row][column])
             except:
-                current.append(parsed_sequences[row][column - 1])
+                continue
         if not np.isnan(get_tajimas_d(current)):
             scores.append(get_tajimas_d(current))
             if len(current[0]) < window_size:
