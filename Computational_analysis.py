@@ -136,8 +136,7 @@ def analyze_pieces(parsed_sequences, window_size):
             try:
                 current.append(parsed_sequences[row][column])
             except:
-                print(f"Exception: {row}, {column}")
-                continue
+                current.append(parsed_sequences[row][column - 1])
         if not np.isnan(get_tajimas_d(current)):
             scores.append(get_tajimas_d(current))
             if len(current[0]) < window_size:
@@ -172,8 +171,8 @@ if __name__ == "__main__":
     # Tajima_D = get_tajimas_d(Sequences)
     # print("The Tajima's D is: " + str(Tajima_D))
 
-    Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
     print("The input window size is: " + str(args.window_size))
+    Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
     # print("The parsed sequences are: ")
     # ppt.pprint(Parsed_sequences)
 
