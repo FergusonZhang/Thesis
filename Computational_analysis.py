@@ -41,7 +41,7 @@ def read_sequences(file_name):
             second_sequence = ""
         return sequences
     else:
-        print("Unrecognized file format!", type)
+        print("Unrecognized file format.", type)
         return
 
 
