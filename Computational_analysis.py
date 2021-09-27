@@ -130,13 +130,13 @@ def parse_into_pieces(sequences, window_size):
 def analyze_pieces(parsed_sequences, window_size):
     positions = []
     scores = []
-    for column in range(len(parsed_sequences[0])):
+    length_min = 999
+    for sample in range(len(parsed_sequences)):
+        length_min = min(length_min, len(parsed_sequences[sample]))
+    for column in range(length_min):
         current = []
         for row in range(len(parsed_sequences)):
-            try:
-                current.append(parsed_sequences[row][column])
-            except:
-                continue
+            current.append(parsed_sequences[row][column])
         if not np.isnan(get_tajimas_d(current)):
             scores.append(get_tajimas_d(current))
             if len(current[0]) < window_size:
