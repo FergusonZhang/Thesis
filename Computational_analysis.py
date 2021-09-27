@@ -133,7 +133,11 @@ def analyze_pieces(parsed_sequences, window_size):
     for column in range(len(parsed_sequences[0])):
         current = []
         for row in range(len(parsed_sequences)):
-            current.append(parsed_sequences[row][column])
+            try:
+                current.append(parsed_sequences[row][column])
+            except:
+                print(f"Exception: {row}, {column}")
+                continue
         if not np.isnan(get_tajimas_d(current)):
             scores.append(get_tajimas_d(current))
             if len(current[0]) < window_size:
@@ -162,11 +166,11 @@ if __name__ == "__main__":
     # print("The sequences are: ")
     # ppt.pprint(Sequences)
 
-    Pi_value = get_nucleotide_diversity(Sequences)
-    print("The nucleotide diversity is: " + str(Pi_value))
+    # Pi_value = get_nucleotide_diversity(Sequences)
+    # print("The nucleotide diversity is: " + str(Pi_value))
 
-    Tajima_D = get_tajimas_d(Sequences)
-    print("The Tajima's D is: " + str(Tajima_D))
+    # Tajima_D = get_tajimas_d(Sequences)
+    # print("The Tajima's D is: " + str(Tajima_D))
 
     Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
     print("The input window size is: " + str(args.window_size))
