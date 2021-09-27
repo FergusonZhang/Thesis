@@ -29,7 +29,7 @@ def read_sequences(file_name):
                 sequences.append(current_sequence)
         return sequences
     elif file_type == "vcf":
-        reader = vcf.Reader(open('file_name', 'r'))
+        reader = vcf.Reader(open(file_name, 'r'))
         for sample_name in reader.samples:
             for record in reader:
                 allele = record.genotype(sample_name).gt_bases
