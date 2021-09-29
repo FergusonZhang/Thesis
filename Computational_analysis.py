@@ -14,9 +14,8 @@ warnings.filterwarnings("ignore")
 def read_sequences(file_name):
     file_type = file_name.split(".")[1]
     sequences = []
-    current_sequence = ""
-    second_sequence = ""
     if file_type == "fas":
+        current_sequence = ""
         with open(file_name) as f:
             for line in f:
                 if line[0] != ">":
@@ -29,12 +28,15 @@ def read_sequences(file_name):
                 sequences.append(current_sequence)
         return sequences
     elif file_type == "vcf":
+        current_sequence = ""
+        second_sequence = ""
         reader = vcf.Reader(open(file_name, 'r'))
         for sample_name in reader.samples:
             for record in reader:
                 allele = record.genotype(sample_name).gt_bases
-                current_sequence = current_sequence + allele[0]
-                second_sequence = second_sequence + allele[2]
+                if allele:
+                    current_sequence = current_sequence + allele[0]
+                    second_sequence = second_sequence + allele[2]
             sequences.append(current_sequence)
             sequences.append(second_sequence)
             current_sequence = ""
@@ -121,8 +123,8 @@ def parse_into_pieces(sequences, window_size):
             new_piece = sequence[index_2*window_size:(index_2 + 1)*window_size]
             if new_piece:
                 pieces[index_1].append(new_piece)
-        if sequence[num*window_size:]:
-            pieces[index_1].append(sequence[num*window_size:])
+        # if sequence[num*window_size:]:
+            # pieces[index_1].append(sequence[num*window_size:])
     return pieces
 
 
@@ -130,10 +132,7 @@ def parse_into_pieces(sequences, window_size):
 def analyze_pieces(parsed_sequences, window_size):
     positions = []
     scores = []
-    length_min = 999
-    for sample in range(len(parsed_sequences)):
-        length_min = min(length_min, len(parsed_sequences[sample]))
-    for column in range(length_min):
+    for column in range(len(parsed_sequences[0])):
         current = []
         for row in range(len(parsed_sequences)):
             current.append(parsed_sequences[row][column])
