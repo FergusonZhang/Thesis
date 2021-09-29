@@ -164,11 +164,11 @@ if __name__ == "__main__":
     # print("The sequences are: ")
     # ppt.pprint(Sequences)
 
-    # Pi_value = get_nucleotide_diversity(Sequences)
-    # print("The nucleotide diversity is: " + str(Pi_value))
+    Pi_value = get_nucleotide_diversity(Sequences)
+    print("The nucleotide diversity is: " + str(Pi_value))
 
-    # Tajima_D = get_tajimas_d(Sequences)
-    # print("The Tajima's D is: " + str(Tajima_D))
+    Tajima_D = get_tajimas_d(Sequences)
+    print("The Tajima's D is: " + str(Tajima_D))
 
     print("The input window size is: " + str(args.window_size))
     Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
