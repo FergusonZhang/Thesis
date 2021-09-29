@@ -172,8 +172,8 @@ if __name__ == "__main__":
 
     print("The input window size is: " + str(args.window_size))
     Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
-    # print("The parsed sequences are: ")
-    # ppt.pprint(Parsed_sequences)
+    print("The parsed sequences are: ")
+    ppt.pprint(Parsed_sequences)
 
     [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
     plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
