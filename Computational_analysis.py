@@ -30,13 +30,10 @@ def read_sequences(file_name):
     elif file_type == "vcf":
         reader = vcf.Reader(open(file_name, 'r'))
         sequences = ([None]*(len(reader.samples)*2))
-        print(sequences)
         for record in reader:
             sample_index = 0
             for sample_name in reader.samples:
                 allele = record.genotype(sample_name).gt_bases
-                # sequences[sample_index] = str(sequences[sample_index]) + allele[0]
-                # sequences[sample_index + 1] = str(sequences[sample_index + 1]) + allele[2]
                 if sequences[sample_index]:
                     sequences[sample_index] = str(sequences[sample_index]) + allele[0]
                 else:
@@ -179,14 +176,14 @@ if __name__ == "__main__":
     Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
     print("The number of row is: " + str(len(Parsed_sequences)))
     print("The number of column is: " + str(len(Parsed_sequences[0])))
-    print("The parsed sequences are: ")
-    ppt.pprint(Parsed_sequences)
+    # print("The parsed sequences are: ")
+    # ppt.pprint(Parsed_sequences)
 
     [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
     plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
              marker='.', markerfacecolor='blue', markersize=5)
-    # plt.xlim(0, max(Bp_positions))
-    # plt.ylim(-1.5*max(Tajima_scores), 1.5*max(Tajima_scores))
+    plt.xlim(0, max(Bp_positions))
+    plt.ylim(-1.5*max(Tajima_scores), 1.5*max(Tajima_scores))
     plt.xlabel("Position")
     plt.ylabel("Tajima's D")
     plt.title(f"{args.file_name} Balancing Selection Analysis")
