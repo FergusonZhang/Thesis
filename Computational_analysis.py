@@ -38,13 +38,13 @@ def read_sequences(file_name):
                 # sequences[sample_index] = str(sequences[sample_index]) + allele[0]
                 # sequences[sample_index + 1] = str(sequences[sample_index + 1]) + allele[2]
                 if sequences[sample_index]:
-                    sequences[sample_index] = allele[0]
-                else:
                     sequences[sample_index] = str(sequences[sample_index]) + allele[0]
-                if sequences[sample_index + 1]:
-                    sequences[sample_index + 1] = allele[2]
                 else:
+                    sequences[sample_index] = allele[0]
+                if sequences[sample_index + 1]:
                     sequences[sample_index + 1] = str(sequences[sample_index + 1]) + allele[2]
+                else:
+                    sequences[sample_index + 1] = allele[2]
                 sample_index += 2
         return sequences
     else:
