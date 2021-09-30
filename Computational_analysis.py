@@ -182,8 +182,8 @@ if __name__ == "__main__":
     [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
     plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
              marker='.', markerfacecolor='blue', markersize=5)
-    plt.xlim(0, max(Bp_positions))
-    plt.ylim(-1.5*max(Tajima_scores), 1.5*max(Tajima_scores))
+    # plt.xlim(0, max(Bp_positions))
+    # plt.ylim(-1.5*max(Tajima_scores), 1.5*max(Tajima_scores))
     plt.xlabel("Position")
     plt.ylabel("Tajima's D")
     plt.title(f"{args.file_name} Balancing Selection Analysis")
