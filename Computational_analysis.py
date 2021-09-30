@@ -126,7 +126,7 @@ def parse_into_pieces(sequences, window_size):
                 pieces[index_1].append(new_piece)
         if sequence[num*window_size:]:
             pieces[index_1].append(sequence[num*window_size:])
-        index_1 = index_1 + 1
+        index_1 += 1
     return pieces
 
 
@@ -163,8 +163,7 @@ if __name__ == "__main__":
         with open(f"{args.file_name}.pkl", "wb") as p:
             pickle.dump(Sequences, p)
 
-    sample_number = len(Sequences)
-    print("The number of sample is: " + str(sample_number))
+    print("The number of sample is: " + str(len(Sequences)))
 
     print("The sequences are: ")
     ppt.pprint(Sequences)
@@ -174,17 +173,17 @@ if __name__ == "__main__":
     # Tajima_D = get_tajimas_d(Sequences)
     # print("The Tajima's D is: " + str(Tajima_D))
 
-    # print("The input window size is: " + str(args.window_size))
-    # Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
-    # print("The parsed sequences are: ")
-    # ppt.pprint(Parsed_sequences)
+    print("The input window size is: " + str(args.window_size))
+    Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
+    print("The parsed sequences are: ")
+    ppt.pprint(Parsed_sequences)
 
-    # [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
-    # plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
-    #          marker='.', markerfacecolor='blue', markersize=5)
-    # plt.xlim(0, max(Bp_positions))
-    # plt.ylim(-1.5*max(Tajima_scores), 1.5*max(Tajima_scores))
-    # plt.xlabel("Position")
-    # plt.ylabel("Tajima's D")
-    # plt.title(f"{args.file_name} Balancing Selection Analysis")
-    # plt.savefig(f"{args.file_name} Tajima's D.png")
+    [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
+    plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
+             marker='.', markerfacecolor='blue', markersize=5)
+    plt.xlim(0, max(Bp_positions))
+    plt.ylim(-1.5*max(Tajima_scores), 1.5*max(Tajima_scores))
+    plt.xlabel("Position")
+    plt.ylabel("Tajima's D")
+    plt.title(f"{args.file_name} Balancing Selection Analysis")
+    plt.savefig(f"{args.file_name} Tajima's D.png")
