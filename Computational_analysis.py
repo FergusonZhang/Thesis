@@ -13,8 +13,8 @@ warnings.filterwarnings("ignore")
 # Read sequences from different file types.
 def read_sequences(file_name):
     file_type = file_name.split(".")[1]
+    sequences = []
     if file_type == "fas":
-        sequences = []
         current_sequence = ""
         with open(file_name) as f:
             for line in f:
@@ -29,7 +29,7 @@ def read_sequences(file_name):
         return sequences
     elif file_type == "vcf":
         reader = vcf.Reader(open(file_name, 'r'))
-        sequences = [None]*(len(reader.samples)*2)
+        sequences.append([]*(len(reader.samples)*2))
         for record in reader:
             sample_index = 0
             for sample_name in reader.samples:
@@ -158,8 +158,8 @@ if __name__ == "__main__":
             pickle.dump(Sequences, p)
 
     print("The number of sample is: " + str(len(Sequences)))
-    print("The sequences are: ")
-    ppt.pprint(Sequences)
+    # print("The sequences are: ")
+    # ppt.pprint(Sequences)
 
     Pi_value = get_nucleotide_diversity(Sequences)
     print("The nucleotide diversity is: " + str(Pi_value))
@@ -168,14 +168,16 @@ if __name__ == "__main__":
 
     print("The input window size is: " + str(args.window_size))
     Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
-    print("The parsed sequences are: ")
-    ppt.pprint(Parsed_sequences)
+    print("The number of row is: " + str(len(Parsed_sequences)))
+    print("The number of column is: " + str(len(Parsed_sequences[0])))
+    # print("The parsed sequences are: ")
+    # ppt.pprint(Parsed_sequences)
 
     [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
     plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
              marker='.', markerfacecolor='blue', markersize=5)
-    plt.xlim(0, max(Bp_positions))
-    plt.ylim(-1.5*max(Tajima_scores), 1.5*max(Tajima_scores))
+    # plt.xlim(0, max(Bp_positions))
+    # plt.ylim(-1.5*max(Tajima_scores), 1.5*max(Tajima_scores))
     plt.xlabel("Position")
     plt.ylabel("Tajima's D")
     plt.title(f"{args.file_name} Balancing Selection Analysis")
