@@ -29,10 +29,11 @@ def read_sequences(file_name):
         return sequences
     elif file_type == "vcf":
         reader = vcf.Reader(open(file_name, 'r'))
-        sequences = ([]*(len(reader.samples)*2 + 100))
+        sequences = []*(len(reader.samples)*2)
         for record in reader:
             sample_index = 0
             for sample_name in reader.samples:
+                print(sample_index)
                 allele = record.genotype(sample_name).gt_bases
                 print(len(allele))
                 sequences[sample_index] = str(sequences[sample_index]) + allele[0]
