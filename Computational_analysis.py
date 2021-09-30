@@ -28,18 +28,19 @@ def read_sequences(file_name):
                 sequences.append(current_sequence)
         return sequences
     elif file_type == "vcf":
-        current_sequence = ""
+        first_sequence = ""
         second_sequence = ""
         reader = vcf.Reader(open(file_name, 'r'))
         for sample_name in reader.samples:
+            print(sample_name)
             for record in reader:
                 allele = record.genotype(sample_name).gt_bases
                 if allele:
-                    current_sequence = current_sequence + allele[0]
+                    first_sequence = first_sequence + allele[0]
                     second_sequence = second_sequence + allele[2]
-            sequences.append(current_sequence)
+            sequences.append(first_sequence)
             sequences.append(second_sequence)
-            current_sequence = ""
+            first_sequence = ""
             second_sequence = ""
         return sequences
     else:
@@ -163,21 +164,21 @@ if __name__ == "__main__":
         with open(f"{args.file_name}.pkl", "wb") as p:
             pickle.dump(Sequences, p)
 
-    # sample_number = len(Sequences)
-    # print("The number of sample is: " + str(sample_number))
-    print("The sequences are: ")
-    ppt.pprint(Sequences)
+    sample_number = len(Sequences)
+    print("The number of sample is: " + str(sample_number))
+    # print("The sequences are: ")
+    # ppt.pprint(Sequences)
 
     # Pi_value = get_nucleotide_diversity(Sequences)
     # print("The nucleotide diversity is: " + str(Pi_value))
     # Tajima_D = get_tajimas_d(Sequences)
     # print("The Tajima's D is: " + str(Tajima_D))
 
-    # print("The input window size is: " + str(args.window_size))
-    # Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
-    # print("The parsed sequences are: ")
-    # ppt.pprint(Parsed_sequences)
-    #
+    print("The input window size is: " + str(args.window_size))
+    Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
+    print("The parsed sequences are: ")
+    ppt.pprint(Parsed_sequences)
+
     # [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
     # plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
     #          marker='.', markerfacecolor='blue', markersize=5)
