@@ -33,9 +33,7 @@ def read_sequences(file_name):
         for record in reader:
             sample_index = 0
             for sample_name in reader.samples:
-                print(sample_index)
                 allele = record.genotype(sample_name).gt_bases
-                print(len(allele))
                 sequences[sample_index] = str(sequences[sample_index]) + allele[0]
                 sequences[sample_index + 1] = str(sequences[sample_index + 1]) + allele[2]
                 sample_index += 2
@@ -117,7 +115,7 @@ def parse_into_pieces(sequences, window_size):
     index_1 = 0
     for sequence in sequences:
         num = len(sequence)//window_size
-        pieces.append([]*len(sequences))
+        pieces = ([None]*len(sequences))
         for index_2 in range(num):
             new_piece = sequence[index_2*window_size:(index_2 + 1)*window_size]
             if new_piece:
