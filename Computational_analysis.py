@@ -28,27 +28,21 @@ def read_sequences(file_name):
                 sequences.append(current_sequence)
         return sequences
     elif file_type == "vcf":
-        # first_sequence = ""
-        # second_sequence = ""
+        first_sequence = ""
+        second_sequence = ""
         reader = vcf.Reader(open(file_name, 'r'))
-        for aSampleName in reader.samples:
-            sequences.append('')
-            for aRecord in reader:
-                allele = aRecord.genotype(aSampleName).gt_bases
+        for sample_name in reader.samples:
+            for record in reader:
+                allele = record.genotype(sample_name).gt_bases
+                print(allele)
                 if allele:
-                    sequences[-1] += allele[0]
+                    first_sequence = first_sequence + allele[0]
+                    second_sequence = second_sequence + allele[2]
+            sequences.append(first_sequence)
+            sequences.append(second_sequence)
+            first_sequence = ""
+            second_sequence = ""
         return sequences
-        # for sample_name in reader.samples:
-        #     for record in reader:
-        #         allele = record.genotype(sample_name).gt_bases
-        #         if allele:
-        #             first_sequence = first_sequence + allele[0]
-        #             second_sequence = second_sequence + allele[2]
-        #     sequences.append(first_sequence)
-        #     sequences.append(second_sequence)
-        #     first_sequence = ""
-        #     second_sequence = ""
-        # return sequences
     else:
         print("Unrecognized file format.", type)
         return
