@@ -34,8 +34,8 @@ def read_sequences(file_name):
         for sample_name in reader.samples:
             for record in reader:
                 allele = record.genotype(sample_name).gt_bases
-                print(allele)
                 if allele:
+                    print(allele)
                     first_sequence = first_sequence + allele[0]
                     second_sequence = second_sequence + allele[2]
             sequences.append(first_sequence)
