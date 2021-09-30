@@ -116,15 +116,17 @@ def get_tajimas_d(sequences):
 # Parse sequence into pieces with fixed length.
 def parse_into_pieces(sequences, window_size):
     pieces = []
-    for index_1, sequence in enumerate(sequences):
+    index_1 = 0
+    for sequence in sequences:
         num = len(sequence)//window_size
         pieces.append([]*num)
         for index_2 in range(num):
             new_piece = sequence[index_2*window_size:(index_2 + 1)*window_size]
             if new_piece:
                 pieces[index_1].append(new_piece)
-        # if sequence[num*window_size:]:
-            # pieces[index_1].append(sequence[num*window_size:])
+        if sequence[num*window_size:]:
+            pieces[index_1].append(sequence[num*window_size:])
+        index_1 = index_1 + 1
     return pieces
 
 
@@ -164,23 +166,26 @@ if __name__ == "__main__":
     # print("The sequences are: ")
     # ppt.pprint(Sequences)
 
-    Pi_value = get_nucleotide_diversity(Sequences)
-    print("The nucleotide diversity is: " + str(Pi_value))
+    sample_number = len(Sequences)
+    print("The number of sample is: " + str(sample_number))
 
-    Tajima_D = get_tajimas_d(Sequences)
-    print("The Tajima's D is: " + str(Tajima_D))
-
-    print("The input window size is: " + str(args.window_size))
-    Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
-    print("The parsed sequences are: ")
-    ppt.pprint(Parsed_sequences)
-
-    [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
-    plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
-             marker='.', markerfacecolor='blue', markersize=5)
-    plt.xlim(0, max(Bp_positions))
-    plt.ylim(-1.5*max(Tajima_scores), 1.5*max(Tajima_scores))
-    plt.xlabel("Position")
-    plt.ylabel("Tajima's D")
-    plt.title(f"{args.file_name} Balancing Selection Analysis")
-    plt.savefig(f"{args.file_name} Tajima's D.png")
+    # Pi_value = get_nucleotide_diversity(Sequences)
+    # print("The nucleotide diversity is: " + str(Pi_value))
+    #
+    # Tajima_D = get_tajimas_d(Sequences)
+    # print("The Tajima's D is: " + str(Tajima_D))
+    #
+    # print("The input window size is: " + str(args.window_size))
+    # Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
+    # print("The parsed sequences are: ")
+    # ppt.pprint(Parsed_sequences)
+    #
+    # [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
+    # plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
+    #          marker='.', markerfacecolor='blue', markersize=5)
+    # plt.xlim(0, max(Bp_positions))
+    # plt.ylim(-1.5*max(Tajima_scores), 1.5*max(Tajima_scores))
+    # plt.xlabel("Position")
+    # plt.ylabel("Tajima's D")
+    # plt.title(f"{args.file_name} Balancing Selection Analysis")
+    # plt.savefig(f"{args.file_name} Tajima's D.png")
