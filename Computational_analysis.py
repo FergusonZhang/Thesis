@@ -13,8 +13,8 @@ warnings.filterwarnings("ignore")
 # Read sequences from different file types.
 def read_sequences(file_name):
     file_type = file_name.split(".")[1]
-    sequences = []
     if file_type == "fas":
+        sequences = []
         current_sequence = ""
         with open(file_name) as f:
             for line in f:
@@ -34,8 +34,8 @@ def read_sequences(file_name):
         for record in reader:
             for sample_name in reader.samples:
                 allele = record.genotype(sample_name).gt_bases
-                sequences[sample_index].append(allele[0])
-                sequences[sample_index + 1].append(allele[2])
+                sequences[sample_index] = sequences[sample_index] + allele[0]
+                sequences[sample_index + 1] = sequences[sample_index + 1] + allele[2]
                 sample_index += 2
             sample_index = 0
         return sequences
