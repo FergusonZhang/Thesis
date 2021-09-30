@@ -119,7 +119,7 @@ def parse_into_pieces(sequences, window_size):
     index_1 = 0
     for sequence in sequences:
         num = len(sequence)//window_size
-        pieces.append([]*num)
+        pieces.append([]*len(sequences))
         for index_2 in range(num):
             new_piece = sequence[index_2*window_size:(index_2 + 1)*window_size]
             if new_piece:
