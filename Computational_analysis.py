@@ -12,9 +12,9 @@ warnings.filterwarnings("ignore")
 
 # Read sequences from different file types.
 def read_sequences(file_name):
-    sequences = []
     file_type = file_name.split(".")[1]
     if file_type == "fas":
+        sequences = []
         current_sequence = ""
         with open(file_name) as f:
             for line in f:
@@ -81,7 +81,7 @@ def get_segregating_sites(sequences):
             current_list = [index for index in range(upper_boundary) if
                             first_sequence[index] != second_sequence[index]]
             sites = sorted(np.unique(sites + current_list))
-    return sites
+    return len(sites)
 
 
 # Calculate Tajima's D.
@@ -98,7 +98,7 @@ def get_tajimas_d(sequences):
     c_2 = b_2 - (n + 2)/(a_1*n) + a_2/a_1**2
     e_1 = c_1/a_1
     e_2 = c_2/(a_1**2 + a_2)
-    s = len(get_segregating_sites(sequences))
+    s = get_segregating_sites(sequences)
     k = get_nucleotide_diversity(sequences)
     avg_length = 0
     for sequence in sequences:
@@ -112,17 +112,15 @@ def get_tajimas_d(sequences):
 # Parse sequence into pieces with fixed length.
 def parse_into_pieces(sequences, window_size):
     pieces = []
-    index_1 = 0
-    for sequence in sequences:
+    for index_1, sequence in enumerate(sequences):
         num = len(sequence)//window_size
-        pieces = ([None]*len(sequences))
+        pieces = ([]*len(sequences))
         for index_2 in range(num):
             new_piece = sequence[index_2*window_size:(index_2 + 1)*window_size]
             if new_piece:
                 pieces[index_1].append(new_piece)
         if sequence[num*window_size:]:
             pieces[index_1].append(sequence[num*window_size:])
-        index_1 += 1
     return pieces
 
 
@@ -160,8 +158,8 @@ if __name__ == "__main__":
             pickle.dump(Sequences, p)
 
     print("The number of sample is: " + str(len(Sequences)))
-    # print("The sequences are: ")
-    # ppt.pprint(Sequences)
+    print("The sequences are: ")
+    ppt.pprint(Sequences)
 
     Pi_value = get_nucleotide_diversity(Sequences)
     print("The nucleotide diversity is: " + str(Pi_value))
@@ -170,8 +168,8 @@ if __name__ == "__main__":
 
     print("The input window size is: " + str(args.window_size))
     Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
-    # print("The parsed sequences are: ")
-    # ppt.pprint(Parsed_sequences)
+    print("The parsed sequences are: ")
+    ppt.pprint(Parsed_sequences)
 
     [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
     plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
