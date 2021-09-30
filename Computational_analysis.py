@@ -32,7 +32,6 @@ def read_sequences(file_name):
         second_sequence = ""
         reader = vcf.Reader(open(file_name, 'r'))
         for sample_name in reader.samples:
-            print(sample_name)
             for record in reader:
                 allele = record.genotype(sample_name).gt_bases
                 if allele:
@@ -166,18 +165,19 @@ if __name__ == "__main__":
 
     sample_number = len(Sequences)
     print("The number of sample is: " + str(sample_number))
-    # print("The sequences are: ")
-    # ppt.pprint(Sequences)
+
+    print("The sequences are: ")
+    ppt.pprint(Sequences)
 
     # Pi_value = get_nucleotide_diversity(Sequences)
     # print("The nucleotide diversity is: " + str(Pi_value))
     # Tajima_D = get_tajimas_d(Sequences)
     # print("The Tajima's D is: " + str(Tajima_D))
 
-    print("The input window size is: " + str(args.window_size))
-    Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
-    print("The parsed sequences are: ")
-    ppt.pprint(Parsed_sequences)
+    # print("The input window size is: " + str(args.window_size))
+    # Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
+    # print("The parsed sequences are: ")
+    # ppt.pprint(Parsed_sequences)
 
     # [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
     # plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
