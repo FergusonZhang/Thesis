@@ -28,19 +28,16 @@ def read_sequences(file_name):
                 sequences.append(current_sequence)
         return sequences
     elif file_type == "vcf":
-        first_sequence = ""
-        second_sequence = ""
         reader = vcf.Reader(open(file_name, 'r'))
-        for sample_name in reader.samples:
-            for record in reader:
+        sequences.append([]*(len(reader.samples)*2 - 1))
+        sample_index = 0
+        for record in reader:
+            for sample_name in reader.samples:
                 allele = record.genotype(sample_name).gt_bases
-                if allele:
-                    first_sequence = first_sequence + allele[0]
-                    second_sequence = second_sequence + allele[2]
-            sequences.append(first_sequence)
-            sequences.append(second_sequence)
-            first_sequence = ""
-            second_sequence = ""
+                sequences[sample_index].append(allele[0])
+                sequences[sample_index + 1].append(allele[2])
+                sample_index += 2
+            sample_index = 0
         return sequences
     else:
         print("Unrecognized file format.", type)
@@ -165,18 +162,18 @@ if __name__ == "__main__":
 
     print("The number of sample is: " + str(len(Sequences)))
 
-    print("The sequences are: ")
-    ppt.pprint(Sequences)
+    # print("The sequences are: ")
+    # ppt.pprint(Sequences)
 
-    # Pi_value = get_nucleotide_diversity(Sequences)
-    # print("The nucleotide diversity is: " + str(Pi_value))
-    # Tajima_D = get_tajimas_d(Sequences)
-    # print("The Tajima's D is: " + str(Tajima_D))
+    Pi_value = get_nucleotide_diversity(Sequences)
+    print("The nucleotide diversity is: " + str(Pi_value))
+    Tajima_D = get_tajimas_d(Sequences)
+    print("The Tajima's D is: " + str(Tajima_D))
 
     print("The input window size is: " + str(args.window_size))
     Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
-    print("The parsed sequences are: ")
-    ppt.pprint(Parsed_sequences)
+    # print("The parsed sequences are: ")
+    # ppt.pprint(Parsed_sequences)
 
     [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
     plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
