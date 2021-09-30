@@ -35,7 +35,6 @@ def read_sequences(file_name):
             for record in reader:
                 allele = record.genotype(sample_name).gt_bases
                 if allele:
-                    print(allele)
                     first_sequence = first_sequence + allele[0]
                     second_sequence = second_sequence + allele[2]
             sequences.append(first_sequence)
@@ -156,14 +155,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     print("The input file is: " + str(args.file_name))
-    Sequences = read_sequences(args.file_name)
-    # if os.path.isfile("sequence_list.pkl"):
-    #     pkl_file = open(f"{args.file_name}.pkl", "rb")
-    #     Sequences = pickle.load(pkl_file)
-    # else:
-    #     Sequences = read_sequences(args.file_name)
-    #     with open(f"{args.file_name}.pkl", "wb") as p:
-    #         pickle.dump(Sequences, p)
+    if os.path.isfile("sequence_list.pkl"):
+        pkl_file = open(f"{args.file_name}.pkl", "rb")
+        Sequences = pickle.load(pkl_file)
+    else:
+        Sequences = read_sequences(args.file_name)
+        with open(f"{args.file_name}.pkl", "wb") as p:
+            pickle.dump(Sequences, p)
 
     sample_number = len(Sequences)
     print("The number of sample is: " + str(sample_number))
