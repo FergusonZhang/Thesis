@@ -160,7 +160,6 @@ if __name__ == "__main__":
             pickle.dump(Sequences, p)
 
     print("The number of sample is: " + str(len(Sequences)))
-
     # print("The sequences are: ")
     # ppt.pprint(Sequences)
 
