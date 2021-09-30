@@ -12,9 +12,9 @@ warnings.filterwarnings("ignore")
 
 # Read sequences from different file types.
 def read_sequences(file_name):
+    sequences = []
     file_type = file_name.split(".")[1]
     if file_type == "fas":
-        sequences = []
         current_sequence = ""
         with open(file_name) as f:
             for line in f:
@@ -29,15 +29,14 @@ def read_sequences(file_name):
         return sequences
     elif file_type == "vcf":
         reader = vcf.Reader(open(file_name, 'r'))
-        sequences = []*(len(reader.samples)*2)
-        sample_index = 0
+        sequences.append([]*(len(reader.samples)*2))
         for record in reader:
+            sample_index = 0
             for sample_name in reader.samples:
                 allele = record.genotype(sample_name).gt_bases
                 sequences[sample_index] = sequences[sample_index] + allele[0]
                 sequences[sample_index + 1] = sequences[sample_index + 1] + allele[2]
                 sample_index += 2
-            sample_index = 0
         return sequences
     else:
         print("Unrecognized file format.", type)
