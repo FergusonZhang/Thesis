@@ -34,8 +34,8 @@ def read_sequences(file_name):
             sample_index = 0
             for sample_name in reader.samples:
                 allele = record.genotype(sample_name).gt_bases
-                sequences[sample_index] = sequences[sample_index] + allele[0]
-                sequences[sample_index + 1] = sequences[sample_index + 1] + allele[2]
+                sequences[sample_index] = str(sequences[sample_index] + allele[0])
+                sequences[sample_index + 1] = str(sequences[sample_index + 1] + allele[2])
                 sample_index += 2
         return sequences
     else:
