@@ -29,7 +29,8 @@ def read_sequences(file_name):
         return sequences
     elif file_type == "vcf":
         reader = vcf.Reader(open(file_name, 'r'))
-        sequences.append([""]*(len(reader.samples)*2))
+        sample_number = len(reader.samples)*2
+        sequences.append([]*sample_number)
         for record in reader:
             sample_index = 0
             for sample_name in reader.samples:
