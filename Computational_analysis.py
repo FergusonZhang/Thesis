@@ -178,6 +178,10 @@ if __name__ == "__main__":
     [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
     plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
              marker='.', markerfacecolor='blue', markersize=5)
+    with open(f"Position_{args.window_size}_{args.file_name}.pkl", "wb") as p:
+        pickle.dump(Bp_positions, p)
+    with open(f"Score_{args.window_size}_{args.file_name}.pkl", "wb") as p:
+        pickle.dump(Tajima_scores, p)
     plt.xlabel("Position")
     plt.ylabel("Tajima's D")
     plt.title(f"{args.file_name} Balancing Selection Analysis")
