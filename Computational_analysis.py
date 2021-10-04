@@ -164,8 +164,8 @@ if __name__ == "__main__":
             pickle.dump(Sequences, p)
 
     print("The number of sample is: " + str(len(Sequences)))
-    print("The first sequence is: ")
-    ppt.pprint(Sequences[0])
+    # print("The first sequence is: ")
+    # ppt.pprint(Sequences[0])
     print("The length of the first sequence is: " + str(len(Sequences[0])))
 
     Pi_value = get_nucleotide_diversity(Sequences)
@@ -177,12 +177,13 @@ if __name__ == "__main__":
     Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
     print("The number of row is: " + str(len(Parsed_sequences)))
     print("The number of column is: " + str(len(Parsed_sequences[0])))
-    print("The first parsed sequence is: ")
-    ppt.pprint(Parsed_sequences[0])
+    # print("The first parsed sequence is: ")
+    # ppt.pprint(Parsed_sequences[0])
 
     [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
     plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
              marker='.', markerfacecolor='blue', markersize=5)
+
     with open(f"Position_{args.window_size}_{args.file_name}.pkl", "wb") as p:
         pickle.dump(Bp_positions, p)
     with open(f"Score_{args.window_size}_{args.file_name}.pkl", "wb") as p:
