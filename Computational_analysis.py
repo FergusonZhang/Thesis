@@ -166,7 +166,7 @@ if __name__ == "__main__":
     print("The number of sample is: " + str(len(Sequences)))
     # print("The first sequence is: ")
     # ppt.pprint(Sequences[0])
-    print("The length of the first sequence is: " + str(len(Sequences[0])))
+    print("The length of the sequence is: " + str(len(Sequences[0])))
 
     Pi_value = get_nucleotide_diversity(Sequences)
     print("The nucleotide diversity is: " + str(Pi_value))
