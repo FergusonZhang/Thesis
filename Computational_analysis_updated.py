@@ -116,7 +116,8 @@ if __name__ == "__main__":
     Tajima_D = get_tajimas_d(Pi_value, len(Base_pair_positions), A_1, E_1, E_2)
     print("The Tajima's D of the genome is: " + str(Tajima_D))
 
-    [Parsed_positions, Parsed_frequencies] = parse_the_sequence(Allele_frequencies, args.window_size)
+    [Parsed_positions, Parsed_frequencies] = \
+        parse_the_sequence(Base_pair_positions, Allele_frequencies, args.window_size)
     print("The number of row is: " + str(len(Parsed_frequencies)))
     print("The number of column is: " + str(len(Parsed_frequencies[0])))
     # print("The length of the last element is: " + str(len(Parsed_frequencies[-1])))
