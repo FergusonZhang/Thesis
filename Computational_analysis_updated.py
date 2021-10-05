@@ -70,12 +70,11 @@ def get_tajimas_d(k, s, a_1, e_1, e_2):
 
 
 def parse_the_frequency(allele_frequencies, window_size):
-    parsed_frequencies = []
     num = len(allele_frequencies)//window_size
-    parsed_frequencies.append([]*num)
+    parsed_frequencies = [None]*num
     for index in range(num):
         new_frequencies = allele_frequencies[index*window_size:(index + 1)*window_size]
-        parsed_frequencies[index].append(new_frequencies)
+        parsed_frequencies[index] = new_frequencies
     if len(allele_frequencies) % window_size != 0:
         new_frequencies = allele_frequencies[(index + 1)*window_size:-1]
         parsed_frequencies.append(new_frequencies)
