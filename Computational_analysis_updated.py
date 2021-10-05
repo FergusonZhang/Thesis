@@ -75,7 +75,7 @@ def parse_the_frequency(allele_frequencies, window_size):
     for index in range(num):
         parsed_frequencies[index] = allele_frequencies[index*window_size:(index + 1)*window_size]
     if len(allele_frequencies) % window_size != 0:
-        parsed_frequencies.append(allele_frequencies[(index + 1)*window_size:-1])
+        parsed_frequencies.append(allele_frequencies[(index + 1)*window_size:])
     return parsed_frequencies
 
 
@@ -92,7 +92,6 @@ if __name__ == "__main__":
     print("The sample size is: " + str(Sample_size))
     print("The number of polymorphic base pair is: " + str(len(Base_pair_positions)))
     print("The true length of the genome is: " + str(Base_pair_positions[-1]))
-    ppt.pprint(Allele_frequencies)
 
     Pi_value = get_nucleotide_diversity(Allele_frequencies, Sample_size)
     print("The nucleotide diversity is: " + str(Pi_value))
@@ -104,4 +103,3 @@ if __name__ == "__main__":
     Parsed_frequencies = parse_the_frequency(Allele_frequencies, args.window_size)
     print("The number of row is: " + str(len(Parsed_frequencies)))
     print("The number of column is: " + str(len(Parsed_frequencies[0])))
-    ppt.pprint(Parsed_frequencies)
