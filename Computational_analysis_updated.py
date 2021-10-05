@@ -72,16 +72,17 @@ def get_tajimas_d(k, s, a_1, e_1, e_2):
 # Parse the base pair positions and the frequencies using the input window size
 def parse_the_sequence(base_pair_positions, allele_frequencies, window_size):
     num = len(allele_frequencies)//window_size
-    parsed_positions = [None]*num
+    parsed_positions_raw = [None]*num
     parsed_frequencies = [None]*num
     for index in range(num):
         parsed_frequencies[index] = allele_frequencies[index*window_size:(index + 1)*window_size]
-        parsed_positions[index] = base_pair_positions[index*window_size:(index + 1)*window_size]
+        parsed_positions_raw[index] = base_pair_positions[index*window_size:(index + 1)*window_size]
     # if len(allele_frequencies) % window_size != 0:
     #     parsed_frequencies.append(allele_frequencies[(index + 1)*window_size:])
     #     parsed_positions.append(base_pair_positions[(index + 1)*window_size:])
-    for position in parsed_positions:
-        position = np.average(position)
+    parsed_positions = []
+    for position in parsed_positions_raw:
+        parsed_positions.append(np.average(position))
     return [parsed_positions, parsed_frequencies]
 
 
