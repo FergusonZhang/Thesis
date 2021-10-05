@@ -94,7 +94,7 @@ def analyze_parsed_sequence(segregating_sites, base_pair_positions, allele_frequ
     tajima_ds = []
     parsed_positions = []
     for index in range(num):
-        parsed_positions.append(np.average(base_pair_positions[index * window_size:(index + 1) * window_size]))
+        parsed_positions.append(np.average(base_pair_positions[index*window_size:(index + 1)*window_size]))
         k = get_nucleotide_diversity(allele_frequencies[index*window_size:(index + 1)*window_size], window_size)
         tajima_ds.append(get_tajimas_d(k, window_size, a_1, e_1, e_2))
     return [parsed_positions, tajima_ds]
@@ -107,6 +107,7 @@ if __name__ == "__main__":
     parser.add_argument(dest='window_size', help='Please enter the window size.', type=int)
     args = parser.parse_args()
     print("The input file is: " + str(args.file_name))
+    print("The input window size is: " + str(args.window_size))
 
     [Sample_size, Segregating_sites, Base_pair_positions, Allele_frequencies] = get_info(args.file_name)
     print("The sample size is: " + str(Sample_size))
@@ -128,6 +129,8 @@ if __name__ == "__main__":
 
     [Parsed_positions, Tajima_Ds] = \
         analyze_parsed_sequence(Segregating_sites, Base_pair_positions, Allele_frequencies, args.window_size)
+    print("The number of fragment is: " + str(len(Tajima_Ds)))
+
     plt.plot(Parsed_positions, Tajima_Ds, color='black', linestyle='dashed', linewidth=0.5,
              marker='.', markerfacecolor='blue', markersize=2.5)
     plt.xlabel("Base Pair Position")
