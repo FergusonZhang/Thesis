@@ -81,7 +81,7 @@ def parse_the_sequence(base_pair_positions, allele_frequencies, window_size):
     #     parsed_frequencies.append(allele_frequencies[(index + 1)*window_size:])
     #     parsed_positions.append(base_pair_positions[(index + 1)*window_size:])
     for position in parsed_positions:
-        parsed_positions = np.average(position)
+        position = np.average(position)
     return [parsed_positions, parsed_frequencies]
 
 
@@ -123,8 +123,6 @@ if __name__ == "__main__":
     # print("The length of the last element is: " + str(len(Parsed_frequencies[-1])))
 
     Tajima_Ds = analyze_parsed_frequency(Parsed_frequencies, args.window_size)
-    ppt.pprint(Tajima_Ds)
-    ppt.pprint(Parsed_positions)
     plt.plot(Parsed_positions, Tajima_Ds, color='blue', linestyle='dashed', linewidth=1,
              marker='.', markerfacecolor='blue', markersize=5)
     plt.xlabel("Position")
