@@ -72,8 +72,10 @@ def get_tajimas_d(k, s, a_1, e_1, e_2):
 def parse_the_frequency(allele_frequencies, window_size):
     num = len(allele_frequencies)//window_size
     parsed_frequencies = [None]*num
+    ppt.pprint(parsed_frequencies)
     for index in range(num):
         new_frequencies = allele_frequencies[index*window_size:(index + 1)*window_size]
+        ppt.pprint(new_frequencies)
         parsed_frequencies[index] = new_frequencies
     if len(allele_frequencies) % window_size != 0:
         new_frequencies = allele_frequencies[(index + 1)*window_size:-1]
