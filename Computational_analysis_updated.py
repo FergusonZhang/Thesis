@@ -69,18 +69,17 @@ def get_tajimas_d(k, s, a_1, e_1, e_2):
         return (k - s/a_1)/np.sqrt(e_1*s + e_2*s*(s - 1))
 
 
-def parse_the_nucleotide_diversity(allele_frequencies, base_pair_positions, window_size):
-    parsed_nucleotide_diversity = []
-    parsed_base_pair_positions = []
+def parse_the_frequency(allele_frequencies, window_size):
+    parsed_frequencies = []
     num = len(allele_frequencies)//window_size
-    parsed_nucleotide_diversity.append([None]*num)
-    parsed_base_pair_positions.append([None]*num)
+    parsed_frequencies.append([]*num)
     for index in range(num):
-        parsed_nucleotide_diversity[index] = allele_frequencies[index*window_size:(index + 1)*window_size]
-        parsed_base_pair_positions[index] = base_pair_positions[index*window_size:(index + 1)*window_size]
-    parsed_nucleotide_diversity.append(allele_frequencies[num*window_size:-1])
-    parsed_base_pair_positions.append(base_pair_positions[num*window_size:-1])
-    return [parsed_nucleotide_diversity, parsed_base_pair_positions]
+        new_frequencies = allele_frequencies[index*window_size:(index + 1)*window_size]
+        parsed_frequencies[index].append(new_frequencies)
+    if len(allele_frequencies) % window_size != 0:
+        new_frequencies = allele_frequencies[(index + 1)*window_size:-1]
+        parsed_frequencies.append(new_frequencies)
+    return parsed_frequencies
 
 
 # The main function.
@@ -104,7 +103,7 @@ if __name__ == "__main__":
     Tajima_D = get_tajimas_d(Pi_value, len(Base_pair_positions), A_1, E_1, E_2)
     print("The Tajima's D of the genome is: " + str(Tajima_D))
 
-    [Parsed_nucleotide_diversity, Parsed_base_pair_positions] = \
-        parse_the_nucleotide_diversity(Allele_frequencies, Base_pair_positions, args.window_size)
-    ppt.pprint(Parsed_nucleotide_diversity)
-    ppt.pprint(Parsed_base_pair_positions)
+    Parsed_frequencies = parse_the_frequency(Allele_frequencies, args.window_size)
+    print("The number of row is: " + str(len(Parsed_frequencies)))
+    print("The number of column is: " + str(len(Parsed_frequencies[0])))
+    ppt.pprint(Parsed_frequencies)
