@@ -69,13 +69,18 @@ def get_tajimas_d(k, s, a_1, e_1, e_2):
         return (k - s/a_1)/np.sqrt(e_1*s + e_2*s*(s - 1))
 
 
-# def parse_the_nucleotide_diversity(allele_frequencies, window_size):
-#     parsed_nucleotide_diversity = []
-#     num = len(allele_frequencies)//window_size
-#     parsed_nucleotide_diversity.append([]*num)
-#     for index in range(num):
-#         parsed_nucleotide_diversity[index] = allele_frequencies[index*window_size:(index + 1)*window_size]
-#     parsed_nucleotide_diversity[-1] = ]
+def parse_the_nucleotide_diversity(allele_frequencies, base_pair_positions, window_size):
+    parsed_nucleotide_diversity = []
+    parsed_base_pair_positions = []
+    num = len(allele_frequencies)//window_size
+    parsed_nucleotide_diversity.append([]*num)
+    parsed_base_pair_positions.append([]*num)
+    for index in range(num):
+        parsed_nucleotide_diversity[index] = allele_frequencies[index*window_size:(index + 1)*window_size]
+        parsed_base_pair_positions[index] = base_pair_positions[index*window_size:(index + 1)*window_size]
+    parsed_nucleotide_diversity[-1] = allele_frequencies[num*window_size:-1]
+    parsed_base_pair_positions[-1] = base_pair_positions[num*window_size:-1]
+    return [parsed_nucleotide_diversity, parsed_base_pair_positions]
 
 
 # The main function.
@@ -92,12 +97,14 @@ if __name__ == "__main__":
     print("The number of polymorphic base pair is: " + str(len(Base_pair_positions)))
     print("The true length of the genome is: " + str(Base_pair_positions[-1]))
 
-    ppt.pprint(Base_pair_positions)
-    ppt.pprint(Allele_frequencies)
-
     Pi_value = get_nucleotide_diversity(Allele_frequencies, Sample_size)
     print("The nucleotide diversity is: " + str(Pi_value))
 
     [A_1, E_1, E_2] = prepare_tajimas_d(Sample_size)
     Tajima_D = get_tajimas_d(Pi_value, len(Base_pair_positions), A_1, E_1, E_2)
     print("The Tajima's D of the genome is: " + str(Tajima_D))
+
+    [Parsed_nucleotide_diversity, Parsed_base_pair_positions] = \
+        parse_the_nucleotide_diversity(Allele_frequencies, Base_pair_positions, args.window_size)
+    ppt.pprint(Parsed_nucleotide_diversity)
+    ppt.pprint(Parsed_base_pair_positions)
