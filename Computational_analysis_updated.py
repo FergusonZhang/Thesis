@@ -20,9 +20,9 @@ def get_info(file_name):
         base_pair_positions.append(record.POS)
         if len(record.INFO["AF"]) != 1:
             print("Non-binary polymorphism detected at position: " + str(record.POS))
-            allele_frequencies.append(1)
+            allele_frequencies.append(1.0)
         else:
-            allele_frequencies.append(record.INFO["AF"])
+            allele_frequencies.append(record.INFO["AF"][0])
     return [sample_size, base_pair_positions, allele_frequencies]
 
 
@@ -41,7 +41,6 @@ def comb(n, k):
 def get_nucleotide_diversity(allele_frequencies, sample_size):
     total_difference = 0
     for frequency in allele_frequencies:
-        frequency = frequency[0]
         total_difference += frequency*(1 - frequency)*(sample_size**2)
     return total_difference/comb(sample_size, 2)
 
@@ -68,6 +67,15 @@ def get_tajimas_d(k, s, a_1, e_1, e_2):
         return float("nan")
     else:
         return (k - s/a_1)/np.sqrt(e_1*s + e_2*s*(s - 1))
+
+
+# def parse_the_nucleotide_diversity(allele_frequencies, window_size):
+#     parsed_nucleotide_diversity = []
+#     num = len(allele_frequencies)//window_size
+#     parsed_nucleotide_diversity.append([]*num)
+#     for index in range(num):
+#         parsed_nucleotide_diversity[index] = allele_frequencies[index*window_size:(index + 1)*window_size]
+#     parsed_nucleotide_diversity[-1] = ]
 
 
 # The main function.
