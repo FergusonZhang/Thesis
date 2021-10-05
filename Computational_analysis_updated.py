@@ -103,3 +103,4 @@ if __name__ == "__main__":
     Parsed_frequencies = parse_the_frequency(Allele_frequencies, args.window_size)
     print("The number of row is: " + str(len(Parsed_frequencies)))
     print("The number of column is: " + str(len(Parsed_frequencies[0])))
+    ppt.pprint(Parsed_frequencies[-1])
