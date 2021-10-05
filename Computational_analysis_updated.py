@@ -41,6 +41,7 @@ def comb(n, k):
 def get_nucleotide_diversity(allele_frequencies, sample_size):
     total_difference = 0
     for frequency in allele_frequencies:
+        frequency = frequency[0]
         total_difference += frequency*(1 - frequency)*(sample_size**2)
     return total_difference/comb(sample_size, 2)
 
@@ -82,8 +83,6 @@ if __name__ == "__main__":
     print("The sample size is: " + str(Sample_size))
     print("The number of polymorphic base pair is: " + str(len(Base_pair_positions)))
     print("The true length of the genome is: " + str(Base_pair_positions[-1]))
-
-    ppt.pprint(Allele_frequencies)
 
     Pi_value = get_nucleotide_diversity(Allele_frequencies, Sample_size)
     print("The nucleotide diversity is: " + str(Pi_value))
