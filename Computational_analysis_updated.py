@@ -69,14 +69,30 @@ def get_tajimas_d(k, s, a_1, e_1, e_2):
         return (k - s/a_1)/np.sqrt(e_1*s + e_2*s*(s - 1))
 
 
-def parse_the_frequency(allele_frequencies, window_size):
+# Parse the base pair positions and the frequencies using the input window size
+def parse_the_sequence(base_pair_positions, allele_frequencies, window_size):
     num = len(allele_frequencies)//window_size
+    parsed_positions = [None]*num
     parsed_frequencies = [None]*num
     for index in range(num):
         parsed_frequencies[index] = allele_frequencies[index*window_size:(index + 1)*window_size]
-    if len(allele_frequencies) % window_size != 0:
-        parsed_frequencies.append(allele_frequencies[(index + 1)*window_size:])
-    return parsed_frequencies
+        parsed_positions[index] = base_pair_positions[index*window_size:(index + 1)*window_size]
+    # if len(allele_frequencies) % window_size != 0:
+    #     parsed_frequencies.append(allele_frequencies[(index + 1)*window_size:])
+    #     parsed_positions.append(base_pair_positions[(index + 1)*window_size:])
+    for position in parsed_positions:
+        parsed_positions = np.average(position)
+    return [parsed_positions, parsed_frequencies]
+
+
+# Calculate the Tajima's Ds for the parsed sequence
+def analyze_parsed_frequency(parsed_frequencies, window_size):
+    tajima_ds = []
+    [a_1, e_1, e_2] = prepare_tajimas_d(window_size)
+    for frequencies in parsed_frequencies:
+        k = get_nucleotide_diversity(frequencies, window_size)
+        tajima_ds.append(get_tajimas_d(k, window_size, a_1, e_1, e_2))
+    return tajima_ds
 
 
 # The main function.
@@ -100,7 +116,15 @@ if __name__ == "__main__":
     Tajima_D = get_tajimas_d(Pi_value, len(Base_pair_positions), A_1, E_1, E_2)
     print("The Tajima's D of the genome is: " + str(Tajima_D))
 
-    Parsed_frequencies = parse_the_frequency(Allele_frequencies, args.window_size)
+    [Parsed_positions, Parsed_frequencies] = parse_the_sequence(Allele_frequencies, args.window_size)
     print("The number of row is: " + str(len(Parsed_frequencies)))
     print("The number of column is: " + str(len(Parsed_frequencies[0])))
-    ppt.pprint(Parsed_frequencies[-1])
+    # print("The length of the last element is: " + str(len(Parsed_frequencies[-1])))
+
+    Tajima_Ds = analyze_parsed_frequency(Parsed_frequencies, args.window_size)
+    plt.plot(Parsed_positions, Tajima_Ds, color='blue', linestyle='dashed', linewidth=1,
+             marker='.', markerfacecolor='blue', markersize=5)
+    plt.xlabel("Position")
+    plt.ylabel("Tajima's D")
+    plt.title(f"{args.file_name} Balancing Selection Analysis")
+    plt.savefig(f"{args.file_name} Tajima's D.png")
