@@ -123,6 +123,10 @@ if __name__ == "__main__":
     # print("The length of the last element is: " + str(len(Parsed_frequencies[-1])))
 
     Tajima_Ds = analyze_parsed_frequency(Parsed_frequencies, args.window_size)
+    print("The length of the Tajima_Ds is: " + str(len(Tajima_Ds)))
+    print("The length of the Parsed_positions is: " + str(len(Parsed_positions)))
+    ppt.pprint(Tajima_Ds)
+    ppt.pprint(Parsed_positions)
     plt.plot(Parsed_positions, Tajima_Ds, color='blue', linestyle='dashed', linewidth=1,
              marker='.', markerfacecolor='blue', markersize=5)
     plt.xlabel("Position")
