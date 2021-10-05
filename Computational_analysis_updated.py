@@ -73,13 +73,13 @@ def parse_the_nucleotide_diversity(allele_frequencies, base_pair_positions, wind
     parsed_nucleotide_diversity = []
     parsed_base_pair_positions = []
     num = len(allele_frequencies)//window_size
-    parsed_nucleotide_diversity.append([]*num)
-    parsed_base_pair_positions.append([]*num)
-    for index in range(num - 1):
+    parsed_nucleotide_diversity.append([None]*num)
+    parsed_base_pair_positions.append([None]*num)
+    for index in range(num):
         parsed_nucleotide_diversity[index] = allele_frequencies[index*window_size:(index + 1)*window_size]
         parsed_base_pair_positions[index] = base_pair_positions[index*window_size:(index + 1)*window_size]
-    parsed_nucleotide_diversity[-1] = allele_frequencies[num*window_size:-1]
-    parsed_base_pair_positions[-1] = base_pair_positions[num*window_size:-1]
+    parsed_nucleotide_diversity.append(allele_frequencies[num*window_size:-1])
+    parsed_base_pair_positions.append(base_pair_positions[num*window_size:-1])
     return [parsed_nucleotide_diversity, parsed_base_pair_positions]
 
 
