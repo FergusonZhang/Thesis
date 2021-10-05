@@ -10,7 +10,7 @@ import os
 warnings.filterwarnings("ignore")
 
 
-# Get sample size, base pair positions, and allele frequencies from the VCF file
+# Get sample size, segregating sites, base pair positions, and allele frequencies from the VCF file
 def get_info(file_name):
     base_pair_positions = []
     allele_frequencies = []
@@ -23,7 +23,8 @@ def get_info(file_name):
             allele_frequencies.append(1.0)
         else:
             allele_frequencies.append(record.INFO["AF"][0])
-    return [sample_size, base_pair_positions, allele_frequencies]
+    segregating_sites = len(base_pair_positions)
+    return [sample_size, segregating_sites, base_pair_positions, allele_frequencies]
 
 
 # Calculate nCr instead of using the math package
@@ -61,7 +62,7 @@ def prepare_tajimas_d(n):
     return [a_1, e_1, e_2]
 
 
-# Calculate the Tajima's D where k is the nucleotide diversity and s is the number of segregating site
+# Calculate the Tajima's D where k is the nucleotide diversity and s is the segregating sites
 def get_tajimas_d(k, s, a_1, e_1, e_2):
     if (np.sqrt(e_1*s + e_2*s*(s - 1))) == 0:
         return float("nan")
@@ -70,30 +71,33 @@ def get_tajimas_d(k, s, a_1, e_1, e_2):
 
 
 # Parse the base pair positions and the frequencies using the input window size
-def parse_the_sequence(base_pair_positions, allele_frequencies, window_size):
-    num = len(allele_frequencies)//window_size
-    parsed_positions_raw = [None]*num
-    parsed_frequencies = [None]*num
-    for index in range(num):
-        parsed_frequencies[index] = allele_frequencies[index*window_size:(index + 1)*window_size]
-        parsed_positions_raw[index] = base_pair_positions[index*window_size:(index + 1)*window_size]
-    # if len(allele_frequencies) % window_size != 0:
-    #     parsed_frequencies.append(allele_frequencies[(index + 1)*window_size:])
-    #     parsed_positions.append(base_pair_positions[(index + 1)*window_size:])
-    parsed_positions = []
-    for position in parsed_positions_raw:
-        parsed_positions.append(np.average(position))
-    return [parsed_positions, parsed_frequencies]
+# def parse_the_sequence(base_pair_positions, allele_frequencies, window_size):
+#     num = len(allele_frequencies)//window_size
+#     parsed_positions_raw = [None]*num
+#     parsed_frequencies = [None]*num
+#     for index in range(num):
+#         parsed_frequencies[index] = allele_frequencies[index*window_size:(index + 1)*window_size]
+#         parsed_positions_raw[index] = base_pair_positions[index*window_size:(index + 1)*window_size]
+#     # if len(allele_frequencies) % window_size != 0:
+#     #     parsed_frequencies.append(allele_frequencies[(index + 1)*window_size:])
+#     #     parsed_positions.append(base_pair_positions[(index + 1)*window_size:])
+#     parsed_positions = []
+#     for position in parsed_positions_raw:
+#         parsed_positions.append(np.average(position))
+#     return [parsed_positions, parsed_frequencies]
 
 
-# Calculate the Tajima's Ds for the parsed sequence
-def analyze_parsed_frequency(parsed_frequencies, window_size):
-    tajima_ds = []
+# Calculate the Tajima's Ds for parsed sequence with a fixed window size
+def analyze_parsed_sequence(segregating_sites, base_pair_positions, allele_frequencies, window_size):
     [a_1, e_1, e_2] = prepare_tajimas_d(window_size)
-    for frequencies in parsed_frequencies:
-        k = get_nucleotide_diversity(frequencies, window_size)
+    num = segregating_sites//window_size
+    tajima_ds = []
+    parsed_positions = []
+    for index in range(num):
+        parsed_positions.append(np.average(base_pair_positions[index * window_size:(index + 1) * window_size]))
+        k = get_nucleotide_diversity(allele_frequencies[index*window_size:(index + 1)*window_size], window_size)
         tajima_ds.append(get_tajimas_d(k, window_size, a_1, e_1, e_2))
-    return tajima_ds
+    return [parsed_positions, tajima_ds]
 
 
 # The main function.
@@ -102,33 +106,31 @@ if __name__ == "__main__":
     parser.add_argument(dest='file_name', help='Please enter the filename.')
     parser.add_argument(dest='window_size', help='Please enter the window size.', type=int)
     args = parser.parse_args()
-
     print("The input file is: " + str(args.file_name))
 
-    [Sample_size, Base_pair_positions, Allele_frequencies] = get_info(args.file_name)
+    [Sample_size, Segregating_sites, Base_pair_positions, Allele_frequencies] = get_info(args.file_name)
     print("The sample size is: " + str(Sample_size))
-    print("The number of segregating site is: " + str(len(Base_pair_positions)))
+    print("The number of segregating site is: " + str(Segregating_sites))
     print("The true length of the genome is: " + str(Base_pair_positions[-1]))
 
-    Pi_value = get_nucleotide_diversity(Allele_frequencies, Sample_size)
-    print("The nucleotide diversity is: " + str(Pi_value))
+    # Pi_value = get_nucleotide_diversity(Allele_frequencies, Sample_size)
+    # print("The nucleotide diversity is: " + str(Pi_value))
+    #
+    # [A_1, E_1, E_2] = prepare_tajimas_d(Sample_size)
+    # Tajima_D = get_tajimas_d(Pi_value, len(Base_pair_positions), A_1, E_1, E_2)
+    # print("The Tajima's D of the genome is: " + str(Tajima_D))
 
-    [A_1, E_1, E_2] = prepare_tajimas_d(Sample_size)
-    Tajima_D = get_tajimas_d(Pi_value, len(Base_pair_positions), A_1, E_1, E_2)
-    print("The Tajima's D of the genome is: " + str(Tajima_D))
-
-    [Parsed_positions, Parsed_frequencies] = \
-        parse_the_sequence(Base_pair_positions, Allele_frequencies, args.window_size)
-    print("The number of row is: " + str(len(Parsed_frequencies)))
-    print("The number of column is: " + str(len(Parsed_frequencies[0])))
+    # [Parsed_positions, Parsed_frequencies] = \
+    #     parse_the_sequence(Base_pair_positions, Allele_frequencies, args.window_size)
+    # print("The number of row is: " + str(len(Parsed_frequencies)))
+    # print("The number of column is: " + str(len(Parsed_frequencies[0])))
     # print("The length of the last element is: " + str(len(Parsed_frequencies[-1])))
 
-    Tajima_Ds = analyze_parsed_frequency(Parsed_frequencies, args.window_size)
-    print("The length of the Tajima_Ds is: " + str(len(Tajima_Ds)))
-    print("The length of the Parsed_positions is: " + str(len(Parsed_positions)))
-    plt.plot(Parsed_positions, Tajima_Ds, color='blue', linestyle='dashed', linewidth=1,
-             marker='.', markerfacecolor='blue', markersize=5)
-    plt.xlabel("Position")
+    [Parsed_positions, Tajima_Ds] = \
+        analyze_parsed_sequence(Segregating_sites, Base_pair_positions, Allele_frequencies, args.window_size)
+    plt.plot(Parsed_positions, Tajima_Ds, color='black', linestyle='dashed', linewidth=0.5,
+             marker='.', markerfacecolor='blue', markersize=2.5)
+    plt.xlabel("Base Pair Position")
     plt.ylabel("Tajima's D")
     plt.title(f"{args.file_name} Balancing Selection Analysis")
     plt.savefig(f"{args.file_name} Tajima's D.png")
