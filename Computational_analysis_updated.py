@@ -74,8 +74,8 @@ if __name__ == "__main__":
     print("The number of segregating site is: " + str(Segregating_sites))
     print("The true length of the genome is: " + str(Base_pair_positions[-1]))
 
-    [Parsed_positions, Tajima_Ds] = \
-        analyze_parsed_sequence(Sample_size, Base_pair_positions, Nucleotide_diversities, args.window_size)
+    [Parsed_positions, Tajima_Ds] = analyze_parsed_sequence(
+        Sample_size, Segregating_sites, Base_pair_positions, Nucleotide_diversities, args.window_size)
     print("The number of parsed fragment is: " + str(len(Tajima_Ds)))
 
     plt.plot(Parsed_positions, Tajima_Ds)
