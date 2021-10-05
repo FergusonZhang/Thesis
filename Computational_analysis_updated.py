@@ -41,7 +41,7 @@ def comb(n, k):
 def get_nucleotide_diversity(allele_frequencies, sample_size):
     total_difference = 0
     for frequency in allele_frequencies:
-        total_difference += frequency*(1 - frequency)*(sample_size**2)
+        total_difference += int(frequency)*(1 - int(frequency))*(sample_size**2)
     return total_difference/comb(sample_size, 2)
 
 
