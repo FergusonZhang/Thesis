@@ -107,7 +107,7 @@ if __name__ == "__main__":
 
     [Sample_size, Base_pair_positions, Allele_frequencies] = get_info(args.file_name)
     print("The sample size is: " + str(Sample_size))
-    print("The number of polymorphic base pair is: " + str(len(Base_pair_positions)))
+    print("The number of segregating site is: " + str(len(Base_pair_positions)))
     print("The true length of the genome is: " + str(Base_pair_positions[-1]))
 
     Pi_value = get_nucleotide_diversity(Allele_frequencies, Sample_size)
@@ -126,8 +126,6 @@ if __name__ == "__main__":
     Tajima_Ds = analyze_parsed_frequency(Parsed_frequencies, args.window_size)
     print("The length of the Tajima_Ds is: " + str(len(Tajima_Ds)))
     print("The length of the Parsed_positions is: " + str(len(Parsed_positions)))
-    ppt.pprint(Tajima_Ds)
-    ppt.pprint(Parsed_positions)
     plt.plot(Parsed_positions, Tajima_Ds, color='blue', linestyle='dashed', linewidth=1,
              marker='.', markerfacecolor='blue', markersize=5)
     plt.xlabel("Position")
