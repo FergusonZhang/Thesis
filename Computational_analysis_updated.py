@@ -18,7 +18,7 @@ def get_info(file_name):
     sample_size = len(reader.samples)
     for record in reader:
         base_pair_positions.append(record.POS)
-        if len(record.INFO["AF"]) > 1:
+        if len(record.INFO["AF"]) != 1:
             print("Non-binary polymorphism detected at position: " + str(record.POS))
             allele_frequencies.append(1)
         else:
