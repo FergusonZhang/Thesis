@@ -3,10 +3,7 @@ import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 import warnings
-import pprint as ppt
 import vcf
-import pickle
-import os
 warnings.filterwarnings("ignore")
 
 
@@ -23,7 +20,7 @@ def get_info(file_name):
     return [sample_size, segregating_sites, base_pair_positions, nucleotide_diversities]
 
 
-# Prepare constants for calculating the Tajima's D where n is the sample size
+# Prepare constants for calculating the Tajima's D with n being the sample size
 def prepare_tajimas_d(n):
     a_1 = 0
     a_2 = 0
@@ -39,7 +36,7 @@ def prepare_tajimas_d(n):
     return [a_1, e_1, e_2]
 
 
-# Calculate the Tajima's D where k is the nucleotide diversity and s is the # of segregating site
+# Calculate the Tajima's D with k being the nucleotide diversity and s being the # of segregating site
 def get_tajimas_d(k, s, a_1, e_1, e_2):
     if (np.sqrt(e_1*s + e_2*s*(s - 1))) == 0:
         return float("nan")
@@ -47,13 +44,12 @@ def get_tajimas_d(k, s, a_1, e_1, e_2):
         return (k - s/a_1)/np.sqrt(e_1*s + e_2*s*(s - 1))
 
 
-# Calculate the Tajima's Ds for parsed sequence with a fixed window size
+# Calculate the Tajima's Ds for parsed sequence with an input window size
 def analyze_parsed_sequence(sample_size, segregating_sites, base_pair_positions, nucleotide_diversities, window_size):
     [a_1, e_1, e_2] = prepare_tajimas_d(sample_size)
-    num = segregating_sites//window_size  # Ignore the remaining polymorphic sites
     tajima_ds = []
     parsed_positions = []
-    for index in range(num):
+    for index in range(segregating_sites//window_size):  # Ignore the remaining polymorphic sites at the end
         parsed_positions.append(np.average(base_pair_positions[index*window_size:(index + 1)*window_size]))
         k = np.sum(nucleotide_diversities[index*window_size:(index + 1)*window_size])
         tajima_ds.append(get_tajimas_d(k, window_size, a_1, e_1, e_2))
