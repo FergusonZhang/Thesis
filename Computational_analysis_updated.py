@@ -92,6 +92,9 @@ if __name__ == "__main__":
     print("The number of polymorphic base pair is: " + str(len(Base_pair_positions)))
     print("The true length of the genome is: " + str(Base_pair_positions[-1]))
 
+    ppt.pprint(Base_pair_positions)
+    ppt.pprint(Allele_frequencies)
+
     Pi_value = get_nucleotide_diversity(Allele_frequencies, Sample_size)
     print("The nucleotide diversity is: " + str(Pi_value))
 
