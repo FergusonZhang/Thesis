@@ -14,17 +14,19 @@ warnings.filterwarnings("ignore")
 def get_info(file_name):
     base_pair_positions = []
     allele_frequencies = []
+    test_pi = 0
     reader = vcf.Reader(open(file_name, 'r'))
-    sample_size = len(reader.samples)
+    sample_size = len(reader.samples)*2
     for record in reader:
         base_pair_positions.append(record.POS)
+        test_pi += record.nucl_diversity
         if len(record.INFO["AF"]) != 1:
             print("Non-binary polymorphism detected at position: " + str(record.POS))
             allele_frequencies.append(1.0)
         else:
             allele_frequencies.append(record.INFO["AF"][0])
     segregating_sites = len(base_pair_positions)
-    return [sample_size, segregating_sites, base_pair_positions, allele_frequencies]
+    return [sample_size, segregating_sites, base_pair_positions, allele_frequencies, test_pi]
 
 
 # Calculate nCr instead of using the math package
@@ -88,14 +90,14 @@ def get_tajimas_d(k, s, a_1, e_1, e_2):
 
 
 # Calculate the Tajima's Ds for parsed sequence with a fixed window size
-def analyze_parsed_sequence(segregating_sites, base_pair_positions, allele_frequencies, window_size):
-    [a_1, e_1, e_2] = prepare_tajimas_d(window_size)
+def analyze_parsed_sequence(sample_size, segregating_sites, base_pair_positions, allele_frequencies, window_size):
+    [a_1, e_1, e_2] = prepare_tajimas_d(sample_size)
     num = segregating_sites//window_size
     tajima_ds = []
     parsed_positions = []
     for index in range(num):
         parsed_positions.append(np.average(base_pair_positions[index*window_size:(index + 1)*window_size]))
-        k = get_nucleotide_diversity(allele_frequencies[index*window_size:(index + 1)*window_size], window_size)
+        k = get_nucleotide_diversity(allele_frequencies[index*window_size:(index + 1)*window_size], sample_size)
         tajima_ds.append(get_tajimas_d(k, window_size, a_1, e_1, e_2))
     return [parsed_positions, tajima_ds]
 
@@ -109,13 +111,14 @@ if __name__ == "__main__":
     print("The input file is: " + str(args.file_name))
     print("The input window size is: " + str(args.window_size))
 
-    [Sample_size, Segregating_sites, Base_pair_positions, Allele_frequencies] = get_info(args.file_name)
+    [Sample_size, Segregating_sites, Base_pair_positions, Allele_frequencies, Test_pi] = get_info(args.file_name)
     print("The sample size is: " + str(Sample_size))
     print("The number of segregating site is: " + str(Segregating_sites))
     print("The true length of the genome is: " + str(Base_pair_positions[-1]))
 
-    # Pi_value = get_nucleotide_diversity(Allele_frequencies, Sample_size)
-    # print("The nucleotide diversity is: " + str(Pi_value))
+    Pi_value = get_nucleotide_diversity(Allele_frequencies, Sample_size)
+    print("The nucleotide diversity is: " + str(Pi_value))
+    print("The alternative diversity is: " + str(Test_pi))
     #
     # [A_1, E_1, E_2] = prepare_tajimas_d(Sample_size)
     # Tajima_D = get_tajimas_d(Pi_value, len(Base_pair_positions), A_1, E_1, E_2)
