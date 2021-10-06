@@ -75,7 +75,7 @@ if __name__ == "__main__":
     print("The number of parsed fragment is: " + str(len(Tajima_Ds)))
 
     plt.plot(Parsed_positions, Tajima_Ds)
-    plt.figure(figsize=(8, 6), dpi=80)
+    # plt.figure(figsize=(8, 6), dpi=80)
     plt.xlabel("Base Pair Position")
     plt.ylabel("Tajima's D")
     plt.title(f"{args.file_name} Balancing Selection Analysis")
