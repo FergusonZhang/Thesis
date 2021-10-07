@@ -7,7 +7,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
-# Get sample size, # of segregating site, base pair positions, and nucleotide diversities
+# Get sample size, number of segregating site, base pair positions, and nucleotide diversities
 def get_info(file_name):
     base_pair_positions = []
     nucleotide_diversities = []
@@ -20,7 +20,7 @@ def get_info(file_name):
     return [sample_size, segregating_sites, base_pair_positions, nucleotide_diversities]
 
 
-# Prepare constants for calculating the Tajima's D (n is the sample size)
+# Prepare constants for the Tajima's D calculation (n is the sample size)
 def prepare_tajimas_d(n):
     a_1 = 0
     a_2 = 0
@@ -36,7 +36,7 @@ def prepare_tajimas_d(n):
     return [a_1, e_1, e_2]
 
 
-# Calculate the Tajima's D ( k is the nucleotide diversity and s is the # of segregating site)
+# Calculate the Tajima's D ( k is the nucleotide diversity and s is the number of segregating site)
 def get_tajimas_d(k, s, a_1, e_1, e_2):
     if (np.sqrt(e_1*s + e_2*s*(s - 1))) == 0:
         return float('nan')
@@ -64,10 +64,10 @@ def analyze_parsed_sequence(sample_size, segregating_sites, base_pair_positions,
 # The main function.
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Balancing selection analysis.')
-    parser.add_argument(dest='file_name', help='Please enter the VCF filename.')
+    parser.add_argument(dest='file_name', help='Please enter the data filename.')
     parser.add_argument(dest='window_size', help='Please enter the window size.', type=int)
     args = parser.parse_args()
-    print('The input file is: ' + str(args.file_name))
+    print('The input data file is: ' + str(args.file_name))
     print('The input window size is: ' + str(args.window_size))
 
     [Sample_size, Segregating_sites, Base_pair_positions, Nucleotide_diversities] = get_info(args.file_name)
