@@ -21,4 +21,4 @@ if __name__ == '__main__':
     plt.plot(Parsed_positions, Tajimas_ds, Color='blue', linewidth=0.7)
     plt.xlabel('Base Pair Position')
     plt.ylabel("Tajima's D")
-    plt.savefig(f'{args.file_name}_{args.window_size}_figure.png', dpi=200)
+    plt.savefig('Figure.png', dpi=200)
