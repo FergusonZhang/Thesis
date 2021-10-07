@@ -5,12 +5,12 @@ import pickle
 
 # The main function.
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Tajima figure plotting.')
-    parser.add_argument(dest='positions_file_name', help='Please enter the base pair position filename.')
-    parser.add_argument(dest='scores_file_name', help="Please enter the Tajima's D file name.")
+    parser = argparse.ArgumentParser(description='Figure plotting.')
+    parser.add_argument(dest='positions_file_name', help='Please enter the base pair positions filename.')
+    parser.add_argument(dest='scores_file_name', help="Please enter the Tajima's Ds file name.")
     args = parser.parse_args()
-    print('The input position file is: ' + str(args.positions_file_name))
-    print('The input score file is: ' + str(args.scores_file_name))
+    print('The input base pair positions file is: ' + str(args.positions_file_name))
+    print("The input Tajima's Ds file is: " + str(args.scores_file_name))
 
     infile = open(args.positions_file_name, 'rb')
     Parsed_positions = pickle.load(infile)
