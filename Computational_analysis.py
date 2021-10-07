@@ -86,9 +86,8 @@ if __name__ == "__main__":
         pickle.dump(Parsed_positions, p)
     print("The number of parsed fragment is: " + str(len(Tajima_Ds)))
 
-    plt.plot(Parsed_positions, Tajima_Ds)
-    plt.rcParams["figure.figsize"] = (20, 3)
+    plt.plot(Parsed_positions, Tajima_Ds, linewidth=0.5)
     plt.xlabel("Base Pair Position")
     plt.ylabel("Tajima's D")
     plt.title(f"{args.file_name} Balancing Selection Analysis")
-    plt.savefig(f"{args.file_name}_{args.window_size}_figure.png", dpi=100)
+    plt.savefig(f"{args.file_name}_{args.window_size}_figure.png", dpi=200)
