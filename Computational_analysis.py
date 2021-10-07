@@ -1,4 +1,4 @@
-# This program will return a list of Tajima's D and a list of position for a given input VCF file with a window size
+# This program will return a list of Tajima's D and a list of position for a given VCF file with a window size
 import argparse
 import numpy as np
 import pickle
@@ -20,7 +20,7 @@ def get_info(file_name):
     return [sample_size, segregating_sites, base_pair_positions, nucleotide_diversities]
 
 
-# Prepare constants for the Tajima's D calculation (n is the sample size)
+# Prepare constants for Tajima's D calculation (n is the sample size)
 def prepare_tajimas_d(n):
     a_1 = 0
     a_2 = 0
@@ -36,7 +36,7 @@ def prepare_tajimas_d(n):
     return [a_1, e_1, e_2]
 
 
-# Calculate the Tajima's D ( k is the nucleotide diversity and s is the number of segregating site)
+# Calculate Tajima's D ( k is the nucleotide diversity and s is the number of segregating site)
 def get_tajimas_d(k, s, a_1, e_1, e_2):
     if (np.sqrt(e_1*s + e_2*s*(s - 1))) == 0:
         return float('nan')
@@ -44,11 +44,11 @@ def get_tajimas_d(k, s, a_1, e_1, e_2):
         return (k - s/a_1)/np.sqrt(e_1*s + e_2*s*(s - 1))
 
 
-# Calculate the Tajima's Ds for parsed sequences as well as corresponding base pair positions
+# Calculate Tajima's Ds for the parsed sequence as well as corresponding base pair positions
 def analyze_parsed_sequence(sample_size, segregating_sites, base_pair_positions, nucleotide_diversities, window_size):
-    [a_1, e_1, e_2] = prepare_tajimas_d(sample_size)
     parsed_positions = []
     tajimas_ds = []
+    [a_1, e_1, e_2] = prepare_tajimas_d(sample_size)
     num = segregating_sites//window_size
     for index in range(num):
         parsed_positions.append(np.average(base_pair_positions[index*window_size:(index + 1)*window_size]))
@@ -64,7 +64,7 @@ def analyze_parsed_sequence(sample_size, segregating_sites, base_pair_positions,
 # The main function.
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Balancing selection analysis.')
-    parser.add_argument(dest='file_name', help='Please enter the data filename.')
+    parser.add_argument(dest='file_name', help='Please enter the data file name.')
     parser.add_argument(dest='window_size', help='Please enter the window size.', type=int)
     args = parser.parse_args()
     print('The input data file is: ' + str(args.file_name))
@@ -73,12 +73,12 @@ if __name__ == '__main__':
     [Sample_size, Segregating_sites, Base_pair_positions, Nucleotide_diversities] = get_info(args.file_name)
     print('The sample size is: ' + str(Sample_size))
     print('The number of segregating site is: ' + str(Segregating_sites))
-    print('The true length of the scaffold is: ' + str(Base_pair_positions[-1]))
+    print('The true length of this scaffold is: ' + str(Base_pair_positions[-1]))
 
     [Parsed_positions, Tajimas_ds] = analyze_parsed_sequence(
         Sample_size, Segregating_sites, Base_pair_positions, Nucleotide_diversities, args.window_size)
-    with open(f'{args.file_name}_{args.window_size}_scores.pkl', 'wb') as t:
-        pickle.dump(Tajimas_ds, t)
+    print('The number of parsed fragment is: ' + str(len(Tajimas_ds)))
     with open(f'{args.file_name}_{args.window_size}_positions.pkl', 'wb') as p:
         pickle.dump(Parsed_positions, p)
-    print('The number of parsed fragment is: ' + str(len(Tajimas_ds)))
+    with open(f'{args.file_name}_{args.window_size}_scores.pkl', 'wb') as s:
+        pickle.dump(Tajimas_ds, s)
