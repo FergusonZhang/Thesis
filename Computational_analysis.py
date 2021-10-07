@@ -1,150 +1,67 @@
-# This program is no longer used
+# This program takes an VCF file and a window size as inputs
+# The outputs are a list of Tajima's Ds and a list of positions for the parsed sequence
+# It will also create a figure of Tajima's D vs. Position
 import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 import warnings
-import pprint as ppt
 import vcf
 import pickle
-import os
 warnings.filterwarnings("ignore")
 
 
-# Read sequences from different file types.
-def read_sequences(file_name):
-    file_type = file_name.split(".")[1]
-    sequences = []
-    if file_type == "fas":
-        current_sequence = ""
-        with open(file_name) as f:
-            for line in f:
-                if line[0] != ">":
-                    current_sequence = current_sequence + line.strip()
-                else:
-                    if current_sequence:
-                        sequences.append(current_sequence)
-                        current_sequence = ""
-            if current_sequence:
-                sequences.append(current_sequence)
-        return sequences
-    elif file_type == "vcf":
-        reader = vcf.Reader(open(file_name, 'r'))
-        sequences = ([None]*(len(reader.samples)*2))
-        for record in reader:
-            sample_index = 0
-            for sample_name in reader.samples:
-                allele = record.genotype(sample_name).gt_bases
-                if sequences[sample_index] is not None:
-                    sequences[sample_index] = str(sequences[sample_index]) + allele[0]
-                else:
-                    sequences[sample_index] = allele[0]
-                if sequences[sample_index + 1] is not None:
-                    sequences[sample_index + 1] = str(sequences[sample_index + 1]) + allele[2]
-                else:
-                    sequences[sample_index + 1] = allele[2]
-                sample_index += 2
-        return sequences
-    else:
-        print("Unrecognized file format.", type)
-        return
+# Get sample size, # of segregating site, base pair positions, and nucleotide diversities from the VCF file
+def get_info(file_name):
+    base_pair_positions = []
+    nucleotide_diversities = []
+    reader = vcf.Reader(open(file_name, 'r'))
+    sample_size = len(reader.samples)*2  # Assume each position has the same sample size
+    for record in reader:
+        base_pair_positions.append(record.POS)
+        nucleotide_diversities.append(record.nucl_diversity)
+    segregating_sites = len(base_pair_positions)  # Assume each site in the data set is a polymorphic site
+    return [sample_size, segregating_sites, base_pair_positions, nucleotide_diversities]
 
 
-# Count single nucleotide polymorphisms.
-def get_pairwise_differences(first_sequence, second_sequence):
-    return np.sum(x != y for x, y in zip(first_sequence, second_sequence))\
-            + abs(len(first_sequence) - len(second_sequence))
-
-
-# Calculate nCr.
-def comb(n, k):
-    if 0 <= k <= n:
-        ntok = 1
-        ktok = 1
-        for t in range(1, min(k, n - k) + 1):
-            ntok *= n
-            ktok *= t
-            n -= 1
-        return ntok//ktok
-    else:
-        return 0
-
-
-# Calculate nucleotide diversity.
-def get_nucleotide_diversity(sequences):
-    pi_value = 0
-    for first_sequence in sequences:
-        for second_sequence in sequences:
-            pi_value += get_pairwise_differences(first_sequence, second_sequence)
-    return pi_value/(2*comb(len(sequences), 2))
-
-
-# Record segregating sites.
-def get_segregating_sites(sequences):
-    sites = []
-    for first_sequence in sequences:
-        for second_sequence in sequences:
-            upper_boundary = min(len(first_sequence), len(second_sequence))
-            current_list = [index for index in range(upper_boundary) if
-                            first_sequence[index] != second_sequence[index]]
-            sites = sorted(np.unique(sites + current_list))
-    return len(sites)
-
-
-# Calculate Tajima's D.
-def get_tajimas_d(sequences):
-    n = len(sequences)
+# Prepare constants for calculating the Tajima's D (n is the sample size)
+def prepare_tajimas_d(n):
     a_1 = 0
     a_2 = 0
-    for number in range(1, n):
-        a_1 += 1/number
-        a_2 += 1/number**2
+    for i in range(1, n):
+        a_1 += 1/i
+        a_2 += 1/i**2
     b_1 = (n + 1)/(3*(n - 1))
     b_2 = 2*(n**2 + n + 3)/(9*n*(n - 1))
     c_1 = b_1 - 1/a_1
     c_2 = b_2 - (n + 2)/(a_1*n) + a_2/a_1**2
     e_1 = c_1/a_1
     e_2 = c_2/(a_1**2 + a_2)
-    s = get_segregating_sites(sequences)
-    k = get_nucleotide_diversity(sequences)
-    avg_length = 0
-    for sequence in sequences:
-        avg_length += len(sequence)/n
+    return [a_1, e_1, e_2]
+
+
+# Calculate the Tajima's D ( k is the nucleotide diversity and s is the # of segregating site)
+def get_tajimas_d(k, s, a_1, e_1, e_2):
     if (np.sqrt(e_1*s + e_2*s*(s - 1))) == 0:
         return float("nan")
     else:
-        return (k - s/a_1)/((np.sqrt(e_1*s + e_2*s*(s - 1)))*avg_length)
+        return (k - s/a_1)/np.sqrt(e_1*s + e_2*s*(s - 1))
 
 
-# Parse sequence into pieces with fixed length.
-def parse_into_pieces(sequences, window_size):
-    pieces = []
-    for index_1, sequence in enumerate(sequences):
-        num = len(sequence)//window_size
-        pieces.append([]*len(sequences))
-        for index_2 in range(num):
-            new_piece = sequence[index_2*window_size:(index_2 + 1)*window_size]
-            if new_piece:
-                pieces[index_1].append(new_piece)
-        if sequence[num*window_size:]:
-            pieces[index_1].append(sequence[num*window_size:])
-    return pieces
-
-
-# Calculate the Tajima's D for each piece
-def analyze_pieces(parsed_sequences, window_size):
-    positions = []
-    scores = []
-    for column in range(len(parsed_sequences[0])):
-        current = []
-        for row in range(len(parsed_sequences)):
-            current.append(parsed_sequences[row][column])
-        if not np.isnan(get_tajimas_d(current)):
-            scores.append(get_tajimas_d(current))
-            if len(current[0]) < window_size:
-                positions.append(column*window_size + (len(current[0]) + 1)//2)
-            else:
-                positions.append(column*window_size + (window_size + 1)//2)
-    return [positions, scores]
+# Calculate the Tajima's Ds for parsed sequences as well as corresponding positions
+def analyze_parsed_sequence(sample_size, segregating_sites, base_pair_positions, nucleotide_diversities, window_size):
+    [a_1, e_1, e_2] = prepare_tajimas_d(sample_size)
+    tajima_ds = []
+    parsed_positions = []
+    num = segregating_sites//window_size
+    for index in range(num):
+        parsed_positions.append(np.average(base_pair_positions[index*window_size:(index + 1)*window_size]))
+        k = np.sum(nucleotide_diversities[index*window_size:(index + 1)*window_size])
+        tajima_ds.append(get_tajimas_d(k, window_size, a_1, e_1, e_2))
+    if segregating_sites % window_size != 0:
+        parsed_positions.append(np.average(base_pair_positions[num*window_size:]))
+        k = np.sum(nucleotide_diversities[num*window_size:])
+        tajima_ds.append(get_tajimas_d(k, segregating_sites % window_size, a_1, e_1, e_2))
+    return [parsed_positions, tajima_ds]
 
 
 # The main function.
@@ -153,42 +70,24 @@ if __name__ == "__main__":
     parser.add_argument(dest='file_name', help='Please enter the filename.')
     parser.add_argument(dest='window_size', help='Please enter the window size.', type=int)
     args = parser.parse_args()
-
     print("The input file is: " + str(args.file_name))
-    if os.path.isfile("sequence_list.pkl"):
-        pkl_file = open(f"{args.file_name}.pkl", "rb")
-        Sequences = pickle.load(pkl_file)
-    else:
-        Sequences = read_sequences(args.file_name)
-        with open(f"{args.file_name}.pkl", "wb") as p:
-            pickle.dump(Sequences, p)
-
-    print("The number of sample is: " + str(len(Sequences)))
-    # print("The first sequence is: ")
-    # ppt.pprint(Sequences[0])
-    print("The length of the sequence is: " + str(len(Sequences[0])))
-
-    Pi_value = get_nucleotide_diversity(Sequences)
-    print("The nucleotide diversity is: " + str(Pi_value))
-    Tajima_D = get_tajimas_d(Sequences)
-    print("The Tajima's D is: " + str(Tajima_D))
-
     print("The input window size is: " + str(args.window_size))
-    Parsed_sequences = parse_into_pieces(Sequences, args.window_size)
-    print("The number of row is: " + str(len(Parsed_sequences)))
-    print("The number of column is: " + str(len(Parsed_sequences[0])))
-    # print("The first parsed sequence is: ")
-    # ppt.pprint(Parsed_sequences[0])
 
-    [Bp_positions, Tajima_scores] = analyze_pieces(Parsed_sequences, args.window_size)
-    plt.plot(Bp_positions, Tajima_scores, color='blue', linestyle='dashed', linewidth=1,
-             marker='.', markerfacecolor='blue', markersize=5)
+    [Sample_size, Segregating_sites, Base_pair_positions, Nucleotide_diversities] = get_info(args.file_name)
+    print("The sample size is: " + str(Sample_size))
+    print("The number of segregating site is: " + str(Segregating_sites))
+    print("The true length of the genome is: " + str(Base_pair_positions[-1]))
 
-    with open(f"Position_{args.window_size}_{args.file_name}.pkl", "wb") as p:
-        pickle.dump(Bp_positions, p)
-    with open(f"Score_{args.window_size}_{args.file_name}.pkl", "wb") as p:
-        pickle.dump(Tajima_scores, p)
-    plt.xlabel("Position")
+    [Parsed_positions, Tajima_Ds] = analyze_parsed_sequence(
+        Sample_size, Segregating_sites, Base_pair_positions, Nucleotide_diversities, args.window_size)
+    with open(f"{args.file_name}_{args.window_size}_scores.pkl", "wb") as t:
+        pickle.dump(Tajima_Ds, t)
+    with open(f"{args.file_name}_{args.window_size}_positions.pkl", "wb") as p:
+        pickle.dump(Parsed_positions, p)
+    print("The number of parsed fragment is: " + str(len(Tajima_Ds)))
+
+    plt.plot(Parsed_positions, Tajima_Ds)
+    plt.xlabel("Base Pair Position")
     plt.ylabel("Tajima's D")
     plt.title(f"{args.file_name} Balancing Selection Analysis")
-    plt.savefig(f"{args.file_name} Tajima's D.png")
+    plt.savefig(f"{args.file_name}_{args.window_size}_figure.png")
