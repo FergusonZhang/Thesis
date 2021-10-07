@@ -1,4 +1,4 @@
-# Tajima's D analysis
+# This program is no longer used
 import argparse
 import matplotlib.pyplot as plt
 import numpy as np

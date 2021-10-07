@@ -57,10 +57,10 @@ def analyze_parsed_sequence(sample_size, segregating_sites, base_pair_positions,
         parsed_positions.append(np.average(base_pair_positions[index*window_size:(index + 1)*window_size]))
         k = np.sum(nucleotide_diversities[index*window_size:(index + 1)*window_size])
         tajima_ds.append(get_tajimas_d(k, window_size, a_1, e_1, e_2))
-        if segregating_sites % window_size != 0:
-            parsed_positions.append(np.average(base_pair_positions[num*window_size:]))
-            k = np.sum(nucleotide_diversities[num*window_size:])
-            tajima_ds.append(get_tajimas_d(k, segregating_sites % window_size, a_1, e_1, e_2))
+    if segregating_sites % window_size != 0:
+        parsed_positions.append(np.average(base_pair_positions[num*window_size:]))
+        k = np.sum(nucleotide_diversities[num*window_size:])
+        tajima_ds.append(get_tajimas_d(k, segregating_sites % window_size, a_1, e_1, e_2))
     return [parsed_positions, tajima_ds]
 
 
@@ -90,4 +90,4 @@ if __name__ == "__main__":
     plt.xlabel("Base Pair Position")
     plt.ylabel("Tajima's D")
     plt.title(f"{args.file_name} Balancing Selection Analysis")
-    plt.savefig(f"Figure_{args.file_name}_{args.window_size}.png")
+    plt.savefig(f"{args.file_name}_{args.window_size}_figure.png")
