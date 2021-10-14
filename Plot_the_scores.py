@@ -16,8 +16,8 @@ if __name__ == '__main__':
     Parsed_positions = pickle.load(infile)
     infile = open(args.score_file_name, 'rb')
     Tajimas_ds = pickle.load(infile)
-    infile.close()
 
+    plt.figure(figsize=(24, 4))
     plt.plot(Parsed_positions, Tajimas_ds, Color='blue', linewidth=0.5)
     plt.xlabel('Base Pair Position')
     plt.ylabel("Tajima's D")
