@@ -1,7 +1,7 @@
 # This program will take a list of Tajima's D and a list of position and return BS candidates
 import argparse
+import numpy as np
 import pickle
-import pprint as ppt
 
 # The main function.
 if __name__ == '__main__':
@@ -19,7 +19,9 @@ if __name__ == '__main__':
     Tajimas_ds = pickle.load(infile)
     infile.close()
 
-    Sorted_scores = sorted(Tajimas_ds)
-    Sorted_positions = [index for _, index in sorted(zip(Parsed_positions, Tajimas_ds))]
-    ppt.pprint(Sorted_positions[0:args.expected_size])
-    ppt.pprint(Sorted_scores[0:args.expected_size])
+    index = np.argsort(Tajimas_ds)
+    index = index[::-1]
+    Sorted_positions = np.array(Parsed_positions)[index]
+    Sorted_scores = np.array(Tajimas_ds)[index]
+    print(Sorted_positions[0:args.expected_size])
+    print(Sorted_scores[0:args.expected_size])
