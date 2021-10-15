@@ -19,6 +19,7 @@ if __name__ == '__main__':
     Tajimas_ds = pickle.load(infile)
     infile.close()
 
+    Sorted_scores = sorted(Tajimas_ds)
     Sorted_positions = [index for _, index in sorted(zip(Parsed_positions, Tajimas_ds))]
-    ppt.pprint(Sorted_positions[0:args.expected_size - 1])
-    ppt.pprint(sorted(Tajimas_ds)[0:args.expected_size - 1])
+    ppt.pprint(Sorted_positions[0:args.expected_size])
+    ppt.pprint(Sorted_scores[0:args.expected_size])
