@@ -1,10 +1,8 @@
-# This program will return a list of Tajima's D and a list of position for a given VCF file with a window size
+# This program will return a list of Tajima's D and a list of position for a given VCF file and a window size
 import argparse
 import numpy as np
 import pickle
 import vcf
-import warnings
-warnings.filterwarnings('ignore')
 
 
 # Get sample size, number of segregating site, base pair positions, and nucleotide diversities
@@ -36,12 +34,12 @@ def prepare_tajimas_d(n):
     return [a_1, e_1, e_2]
 
 
-# Calculate Tajima's D ( k is the nucleotide diversity and s is the number of segregating site)
-def get_tajimas_d(k, s, a_1, e_1, e_2):
-    if (np.sqrt(e_1*s + e_2*s*(s - 1))) == 0:
+# Calculate Tajima's D ( k is the nucleotide diversity and seg is the number of segregating site)
+def get_tajimas_d(k, seg, a_1, e_1, e_2):
+    if (np.sqrt(e_1 * seg + e_2 * seg * (seg - 1))) == 0:
         return float('nan')
     else:
-        return (k - s/a_1)/np.sqrt(e_1*s + e_2*s*(s - 1))
+        return (k - seg / a_1) / np.sqrt(e_1 * seg + e_2 * seg * (seg - 1))
 
 
 # Calculate Tajima's Ds for the parsed sequence as well as corresponding base pair positions
@@ -80,5 +78,7 @@ if __name__ == '__main__':
     print('The number of parsed fragment is: ' + str(len(Tajimas_ds)))
     with open(f'{args.file_name}_{args.window_size}_positions.pkl', 'wb') as p:
         pickle.dump(Parsed_positions, p)
+    p.close()
     with open(f'{args.file_name}_{args.window_size}_scores.pkl', 'wb') as s:
         pickle.dump(Tajimas_ds, s)
+    s.close()
