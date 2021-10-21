@@ -28,7 +28,7 @@ if __name__ == '__main__':
     plt.figure(figsize=(40, 5))
     plt.plot(Parsed_positions, Tajimas_ds, Color='blue', linewidth=0.5)
     plt.plot(Sorted_positions, Sorted_scores, 'ro', markersize=2)
-    plt.title('Balancing Selection Candidate sites')
+    plt.title('Balancing Selection Candidate Sites')
     plt.xlabel('Base Pair Position')
     plt.ylabel("Tajima's D")
     plt.savefig(f'{args.score_file_name}_figure.png', dpi=500)
