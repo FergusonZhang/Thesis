@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pickle
 
+
 # The main function.
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Figure plotting.')
@@ -17,7 +18,6 @@ if __name__ == '__main__':
     infile = open(args.score_file_name, 'rb')
     Tajimas_ds = pickle.load(infile)
     infile.close()
-
     index = np.argsort(Tajimas_ds)
     index = index[::-1]
     Sorted_positions = np.array(Parsed_positions)[index]
