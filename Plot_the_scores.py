@@ -20,7 +20,7 @@ if __name__ == '__main__':
         Tajimas_ds = pickle.load(infile)
         infile.close()
 
-        for j in range(len(Parsed_positions) + 1):
+        for j in range(len(Parsed_positions)):
             if Tajimas_ds[j] >= args.cutoff:
                 Outlier_positions.append(Parsed_positions[j])
                 Outlier_scores.append(Tajimas_ds[j])
