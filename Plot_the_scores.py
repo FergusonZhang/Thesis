@@ -31,4 +31,4 @@ if __name__ == '__main__':
         plt.title('Balancing Selection Candidate Sites')
         plt.xlabel('Base Pair Position')
         plt.ylabel("Tajima's D")
-        plt.savefig(f'Figures/Cgrand_scaffold_{i}_shapeit4.vcf_{args.window_size}_figure.png', dpi=500)
+        plt.savefig(f'Figures/Cgrand_scaffold_{i}_{args.window_size}_figure.png', dpi=500)
