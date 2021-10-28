@@ -15,10 +15,5 @@ if __name__ == '__main__':
         Scores = pickle.load(infile)
         infile.close()
         Tajimas_ds.append(Scores)
-
     Sorted_scores = sorted(Tajimas_ds, reverse=True)
-    Cutoff = Sorted_scores[args.expected_number]
-
-    print('The window size is: ' + args.window_size)
-    print('The expected number is: ' + args.expected_number)
-    print('The cut off value of all eight chromosomes is: ' + Cutoff)
+    print('The cut off value is: ' + Sorted_scores[args.expected_number])
