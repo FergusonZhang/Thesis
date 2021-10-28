@@ -4,7 +4,7 @@ import pickle
 
 # The main function
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Cut off value determination.')
+    parser = argparse.ArgumentParser(description='Cutoff value determination.')
     parser.add_argument(dest='window_size', help='Please enter the parsing window size.', type=int)
     parser.add_argument(dest='expected_number', help='Please enter the expected number.', type=int)
     args = parser.parse_args()
