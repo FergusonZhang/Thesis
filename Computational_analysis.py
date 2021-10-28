@@ -59,7 +59,7 @@ def analyze_parsed_sequence(sample_size, segregating_sites, base_pair_positions,
     return [parsed_positions, tajimas_ds]
 
 
-# The main function.
+# The main function
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Balancing selection analysis.')
     parser.add_argument(dest='file_name', help='Please enter the data file name.')
