@@ -14,7 +14,6 @@ if __name__ == '__main__':
         infile = open(f'Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_{args.window_size}_scores.pkl', 'rb')
         Scores = pickle.load(infile)
         infile.close()
-        Tajimas_ds.append(Scores)
+        Tajimas_ds.extend(Scores)
     Sorted_scores = sorted(Tajimas_ds, reverse=True)
-    print(len(Sorted_scores[0]))
     print('The cut off value is: ' + Sorted_scores[args.expected_number])
