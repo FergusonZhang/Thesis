@@ -1,4 +1,4 @@
-# This program will take a list of Tajima's D and a list of position to create a figure
+# This program will create Tajima's D vs. Positions figures
 import argparse
 import matplotlib.pyplot as plt
 import pickle
@@ -8,12 +8,12 @@ import pickle
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Figure plotting.')
     parser.add_argument(dest='window_size', help='Please enter the parsing window size.', type=int)
-    parser.add_argument(dest='cut_off', help='Please enter the cut off value.', type=int)
+    parser.add_argument(dest='cutoff', help='Please enter the cut off value.', type=int)
     args = parser.parse_args()
 
-    Outlier_positions = []
-    Outlier_scores = []
     for i in range(1, 9):
+        Outlier_positions = []
+        Outlier_scores = []
         infile = open(f'Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_{args.window_size}_positions.pkl', 'rb')
         Parsed_positions = pickle.load(infile)
         infile = open(f'Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_{args.window_size}_scores.pkl', 'rb')
@@ -21,7 +21,7 @@ if __name__ == '__main__':
         infile.close()
 
         for j in range(len(Parsed_positions) + 1):
-            if Tajimas_ds[j] >= args.cutt_off:
+            if Tajimas_ds[j] >= args.cuttoff:
                 Outlier_positions.append(Parsed_positions[j])
                 Outlier_scores.append(Tajimas_ds[j])
 
