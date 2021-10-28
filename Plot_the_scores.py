@@ -21,7 +21,7 @@ if __name__ == '__main__':
         infile.close()
 
         for j in range(len(Parsed_positions)):
-            if Tajimas_ds[j] >= args.cutoff:
+            if Tajimas_ds[j] > args.cutoff:
                 Outlier_positions.append(Parsed_positions[j])
                 Outlier_scores.append(Tajimas_ds[j])
 
