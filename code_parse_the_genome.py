@@ -14,8 +14,8 @@ def get_info(file_name):
     for record in reader:
         base_pair_positions.append(record.POS)
         nucleotide_diversities.append(record.nucl_diversity)
-    segregating_sites = len(base_pair_positions)
-    return [sample_size, segregating_sites, base_pair_positions, nucleotide_diversities]
+    segregating_site = len(base_pair_positions)
+    return [sample_size, segregating_site, base_pair_positions, nucleotide_diversities]
 
 
 # Prepare constants for Tajima's D calculation (n is the sample size)
@@ -43,19 +43,19 @@ def get_tajimas_d(k, seg, a_1, e_1, e_2):
 
 
 # Calculate Tajima's Ds for the parsed sequence as well as corresponding base pair positions
-def analyze_parsed_sequence(sample_size, segregating_sites, base_pair_positions, nucleotide_diversities, window_size):
+def analyze_parsed_sequence(sample_size, segregating_site, base_pair_positions, nucleotide_diversities, window_size):
     parsed_positions = []
     tajimas_ds = []
     [a_1, e_1, e_2] = prepare_tajimas_d(sample_size)
-    num = segregating_sites//window_size
+    num = segregating_site//window_size
     for index in range(num):
         parsed_positions.append(np.average(base_pair_positions[index*window_size:(index + 1)*window_size]))
         k = np.sum(nucleotide_diversities[index*window_size:(index + 1)*window_size])
         tajimas_ds.append(get_tajimas_d(k, window_size, a_1, e_1, e_2))
-    if segregating_sites % window_size != 0:
+    if segregating_site % window_size != 0:
         parsed_positions.append(np.average(base_pair_positions[num*window_size:]))
         k = np.sum(nucleotide_diversities[num*window_size:])
-        tajimas_ds.append(get_tajimas_d(k, segregating_sites % window_size, a_1, e_1, e_2))
+        tajimas_ds.append(get_tajimas_d(k, segregating_site % window_size, a_1, e_1, e_2))
     return [parsed_positions, tajimas_ds]
 
 
@@ -68,13 +68,13 @@ if __name__ == '__main__':
     print('The input VCF file is: ' + str(args.file_name))
     print('The selected window size is: ' + str(args.window_size))
 
-    [Sample_size, Segregating_sites, Base_pair_positions, Nucleotide_diversities] = get_info(args.file_name)
+    [Sample_size, Segregating_site, Base_pair_positions, Nucleotide_diversities] = get_info(args.file_name)
     print('The sample size is: ' + str(Sample_size))
-    print('The number of segregating site is: ' + str(Segregating_sites))
+    print('The number of segregating site is: ' + str(Segregating_site))
     print('The true length of this chromosome is: ' + str(Base_pair_positions[-1]))
 
     [Parsed_positions, Tajimas_ds] = analyze_parsed_sequence(
-        Sample_size, Segregating_sites, Base_pair_positions, Nucleotide_diversities, args.window_size)
+        Sample_size, Segregating_site, Base_pair_positions, Nucleotide_diversities, args.window_size)
     print('The number of fragment is: ' + str(len(Tajimas_ds)))
     with open(f'{args.file_name}_{args.window_size}_positions.pkl', 'wb') as p:
         pickle.dump(Parsed_positions, p)
