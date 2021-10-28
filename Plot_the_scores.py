@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pickle
 
 
-# The main function.
+# The main function
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Figure plotting.')
     parser.add_argument(dest='window_size', help='Please enter the parsing window size.', type=int)
