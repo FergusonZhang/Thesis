@@ -16,5 +16,5 @@ if __name__ == '__main__':
         infile.close()
         Tajimas_ds.append(Scores)
     Sorted_scores = sorted(Tajimas_ds, reverse=True)
-    print(len(Sorted_scores))
+    print(len(Sorted_scores[0]))
     print('The cut off value is: ' + Sorted_scores[args.expected_number])
