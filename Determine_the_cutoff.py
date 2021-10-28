@@ -1,4 +1,4 @@
-# This program will return the cut off value given a window size and an expected number
+# This program will return the cutoff value given a window size and an expected number
 import argparse
 import pickle
 
