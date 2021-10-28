@@ -8,7 +8,7 @@ import pickle
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Figure plotting.')
     parser.add_argument(dest='window_size', help='Please enter the parsing window size.', type=int)
-    parser.add_argument(dest='cutoff', help='Please enter the cut off value.', type=int)
+    parser.add_argument(dest='cutoff', help='Please enter the cut off value.', type=float)
     args = parser.parse_args()
 
     for i in range(1, 9):
