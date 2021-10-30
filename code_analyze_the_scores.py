@@ -35,7 +35,7 @@ if __name__ == '__main__':
             if Tajimas_ds[j] > Cutoff:
                 Outlier_positions.append(Parsed_positions[j])
                 Outlier_scores.append(Tajimas_ds[j])
-        with open(f'Data_pkl/Cgrand_scaffold_{i}_{args.window_size}_{args.top}_candidates.pkl', 'wb') as p:
+        with open(f'Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_{args.window_size}_{args.top}_candidates.pkl', 'wb') as p:
             pickle.dump(Outlier_positions, p)
         p.close()
 
