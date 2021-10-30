@@ -1,4 +1,4 @@
-# This program will take candidate positions and return corresponding gene candidates
+# This program will take candidate positions and return corresponding candidate genes
 import argparse
 import gffutils
 import pickle
@@ -17,10 +17,11 @@ if __name__ == '__main__':
             f'Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_{args.window_size}_{args.top}_candidates.pkl', 'rb')
         Candidates = pickle.load(infile)
         infile.close()
-        print(f'The gene candidates on chromosome {i} are:')
+        print(f'The candidate genes on chromosome {i} are:')
 
         for gene in db.features_of_type('gene', order_by='start'):
             if gene.seqid == f'scaffold_{i}':
                 for candidate in Candidates:
                     if gene.start <= candidate <= gene.end:
                         print(gene.featuretype, gene.start, gene.end, gene.id)
+        print('\n')
