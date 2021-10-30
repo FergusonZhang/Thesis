@@ -15,7 +15,7 @@ if __name__ == '__main__':
     Candidates = pickle.load(infile)
     infile.close()
 
-    db = gffutils.create_db('Crubella_474_v1.1.gene.gff3', 'data.db', force=True, keep_order=True,
+    db = gffutils.create_db('Data_raw/Crubella_474_v1.1.gene.gff3', 'data.db', force=True, keep_order=True,
                             merge_strategy='merge', sort_attribute_values=True)
     Genes = []
     for gene in db.features_of_type('gene', order_by='start'):
