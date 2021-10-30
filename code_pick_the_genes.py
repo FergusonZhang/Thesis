@@ -1,4 +1,4 @@
-# This program will take a list of candidate position on a chromosome and return candidates
+# This program will take a list of candidate position on a chromosome and return gene candidates
 import argparse
 import gffutils
 import pickle
@@ -11,7 +11,8 @@ if __name__ == '__main__':
     parser.add_argument(dest='scaffold', help='Please enter the scaffold number.', type=int)
     args = parser.parse_args()
 
-    infile = open(f'Data_pkl/Cgrand_scaffold_{args.scaffold}_{args.window_size}_{args.top}_candidates.pkl', 'rb')
+    infile = open(
+        f'Data_pkl/Cgrand_scaffold_{args.scaffold}_shapeit4.vcf_{args.window_size}_{args.top}_candidates.pkl', 'rb')
     Candidates = pickle.load(infile)
     infile.close()
 
@@ -21,7 +22,6 @@ if __name__ == '__main__':
     for gene in db.features_of_type('gene', order_by='start'):
         if gene.seqid == f'scaffold_{args.scaffold}':
             Genes.append(gene)
-
     for gene in Genes:
         for fragment in db.children(gene, order_by='start'):
             for candidate in Candidates:
