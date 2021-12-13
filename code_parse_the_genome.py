@@ -76,9 +76,9 @@ if __name__ == '__main__':
     [Parsed_positions, Tajimas_ds] = analyze_parsed_sequence(
         Sample_size, Segregating_site, Base_pair_positions, Nucleotide_diversities, args.window_size)
     print('The number of fragment is: ' + str(len(Tajimas_ds)))
-    with open(f'{args.file_name}_{args.window_size}_positions.pkl', 'wb') as p:
+    with open(f'Data_pkl/{args.file_name}_{args.window_size}_positions.pkl', 'wb') as p:
         pickle.dump(Parsed_positions, p)
     p.close()
-    with open(f'{args.file_name}_{args.window_size}_scores.pkl', 'wb') as s:
+    with open(f'Data_pkl/{args.file_name}_{args.window_size}_scores.pkl', 'wb') as s:
         pickle.dump(Tajimas_ds, s)
     s.close()
