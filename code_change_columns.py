@@ -13,4 +13,4 @@ if __name__ == '__main__':
         data['c'] = constant*data['d']
         frames = [all_data, data]
         all_data = pd.concat(frames)
-    all.to_csv('Data_plink/modified_scaffold_plink.map', header=None, index=None, sep='\t')
+    all_data.to_csv('Data_plink/modified_scaffold_plink.map', header=None, index=None, sep='\t')
