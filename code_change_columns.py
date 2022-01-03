@@ -26,6 +26,7 @@ if __name__ == '__main__':
         else:
             constant = 1/13362172
         data['c'] = constant*data['d']
+        data['a'].to_csv(f'test.ehh', header=None, index=None, sep='\t')
         data.to_csv(f'Data_plink/modified_scaffold_{i}_plink.map', header=None, index=None, sep='\t')
         # frames = [all_data, data]
         # all_data = pd.concat(frames)
