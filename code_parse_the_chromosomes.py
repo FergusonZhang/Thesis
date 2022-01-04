@@ -1,4 +1,4 @@
-# This program will return a list of Tajima's D and a list of position for a given VCF file and a window size
+# This program will return a list of Tajima's D and a list of position for a given chromosome and a window size
 import argparse
 import numpy as np
 import pickle
@@ -18,7 +18,7 @@ def get_info(file_name):
     return [sample_size, segregating_site, base_pair_positions, nucleotide_diversities]
 
 
-# Prepare constants for Tajima's D calculation (n is the sample size)
+# Prepare constants for the Tajima's D calculation (n is the sample size)
 def prepare_tajimas_d(n):
     a_1 = 0
     a_2 = 0
@@ -34,7 +34,7 @@ def prepare_tajimas_d(n):
     return [a_1, e_1, e_2]
 
 
-# Calculate Tajima's D ( k is the nucleotide diversity and seg is the number of segregating site)
+# Calculate the Tajima's D ( k is the nucleotide diversity and seg is the number of segregating site)
 def get_tajimas_d(k, seg, a_1, e_1, e_2):
     if (np.sqrt(e_1*seg + e_2*seg*(seg - 1))) == 0:
         return float('nan')
@@ -42,7 +42,7 @@ def get_tajimas_d(k, seg, a_1, e_1, e_2):
         return (k - seg/a_1)/np.sqrt(e_1*seg + e_2*seg*(seg - 1))
 
 
-# Calculate Tajima's Ds for the parsed sequence as well as corresponding base pair positions
+# Calculate Tajima's Ds for the parsed chromosome as well as corresponding base pair positions
 def analyze_parsed_sequence(sample_size, segregating_site, base_pair_positions, nucleotide_diversities, window_size):
     parsed_positions = []
     tajimas_ds = []
@@ -61,7 +61,7 @@ def analyze_parsed_sequence(sample_size, segregating_site, base_pair_positions, 
 
 # The main function
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Genome parser.')
+    parser = argparse.ArgumentParser(description='Chromosome parser.')
     parser.add_argument(dest='file_name', help='Please enter the VCF file name.')
     parser.add_argument(dest='window_size', help='Please enter the selected window size.', type=int)
     args = parser.parse_args()
