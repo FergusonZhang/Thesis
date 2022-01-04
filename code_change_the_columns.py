@@ -2,12 +2,12 @@
 import numpy as np
 import pandas as pd
 
+
 if __name__ == '__main__':
     for i in range(1, 9):
         Data = pd.read_csv(f'Data_plink/scaffold_{i}_plink.map', sep='\t', header=None)
         Data.columns = ['a', 'b', 'c', 'd']
 
-        # Calculate genetic positions assuming a uniform recombination possibility
         Data['a'] = [np.int64(i)]*Data.shape[0]
         if i == 1:
             constant = 1/19624005
