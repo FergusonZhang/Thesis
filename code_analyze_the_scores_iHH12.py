@@ -1,6 +1,5 @@
-# This program will determine the cutoff iHH12 value for the whole genome
-# It will then plot iHH12 vs. Position figures for all eight chromosomes
-# Finally, it will return the outliers with corresponding positions for each chromosome
+# This program will plot iHH12 vs. Position figures for all eight chromosomes
+# It will also return the outliers with corresponding positions for each chromosome
 import argparse
 import matplotlib.pyplot as plt
 import pickle
@@ -10,7 +9,7 @@ from sklearn import preprocessing
 
 # The main function
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Gene selector for iHH12.')
+    parser = argparse.ArgumentParser(description='Outlier analyzer for iHH12.')
     parser.add_argument(dest='top', help='Please enter the top number.', type=int)
     args = parser.parse_args()
 
@@ -22,6 +21,7 @@ if __name__ == '__main__':
         Data = pd.concat([Data, data])
     Sorted_data = Data.sort_values(by=['d'], ascending=False, ignore_index=True)
     Sorted_data = Sorted_data.head(args.top)
+    Cutoff = Sorted_data.iloc[args.top - 1, 3]
 
     Outliers_1 = []
     Outliers_2 = []
@@ -72,19 +72,22 @@ if __name__ == '__main__':
     with open(f'Results_iHH12/outliers_8.ihh12.out.pkl', 'wb') as p:
         pickle.dump(Outliers_8, p)
         p.close()
-
     for j in range(1, 9):
         data = pd.read_csv(f'Results_iHH12/outfile_{j}.ihh12.out', sep='\t', header=None)
         data.columns = ['a', 'b', 'c', 'd']
+        data['d'] = preprocessing.scale(data['d'])
         Positions = data['b'].values.tolist()
         Scores = data['d'].values.tolist()
         infile = open(f'Results_iHH12/outliers_{j}.ihh12.out.pkl', 'rb')
         Outlier_positions = pickle.load(infile)
         infile.close()
-
+        Outlier_scores = []
+        for index, row in data.iterrows():
+            if data['d'] >= Cutoff:
+                Outlier_scores.append(data['d'])
         plt.figure(figsize=(40, 5))
         plt.plot(Positions, Scores, Color='blue', linewidth=0.5)
-        # plt.plot(Outlier_positions, Outlier_scores, 'ro', markersize=2)
+        plt.plot(Outlier_positions, Outlier_scores, 'ro', markersize=2)
         plt.title('Balancing Selection Candidate Sites')
         plt.xlabel('Base Pair Position')
         plt.ylabel("iHH12")
