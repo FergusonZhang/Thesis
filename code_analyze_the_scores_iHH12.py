@@ -32,19 +32,19 @@ if __name__ == '__main__':
         if row['a'][9] == '1':
             Outliers_1.append([row['b'], row['d']])
         elif row['a'][9] == '2':
-            Outliers_2.append(row['b'])
+            Outliers_2.append([row['b'], row['d']])
         elif row['a'][9] == '3':
-            Outliers_3.append(row['b'])
+            Outliers_3.append([row['b'], row['d']])
         elif row['a'][9] == '4':
-            Outliers_4.append(row['b'])
+            Outliers_4.append([row['b'], row['d']])
         elif row['a'][9] == '5':
-            Outliers_5.append(row['b'])
+            Outliers_5.append([row['b'], row['d']])
         elif row['a'][9] == '6':
-            Outliers_6.append(row['b'])
+            Outliers_6.append([row['b'], row['d']])
         elif row['a'][9] == '7':
-            Outliers_7.append(row['b'])
+            Outliers_7.append([row['b'], row['d']])
         elif row['a'][9] == '8':
-            Outliers_8.append(row['b'])
+            Outliers_8.append([row['b'], row['d']])
     with open(f'Results_iHH12/outliers_1.ihh12.out.pkl', 'wb') as p:
         pickle.dump(Outliers_1, p)
         p.close()
