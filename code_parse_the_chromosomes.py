@@ -1,4 +1,4 @@
-# This program will return a list of Tajima's D and a list of position for a given chromosome and a window size
+# This program will parse the given chromosome
 import argparse
 import numpy as np
 import pickle
@@ -42,7 +42,7 @@ def get_tajimas_d(k, seg, a_1, e_1, e_2):
         return (k - seg/a_1)/np.sqrt(e_1*seg + e_2*seg*(seg - 1))
 
 
-# Calculate Tajima's Ds for the parsed chromosome as well as corresponding base pair positions
+# Calculate Tajima's Ds for the parsed chromosome as well as base pair positions
 def analyze_parsed_sequence(sample_size, segregating_site, base_pair_positions, nucleotide_diversities, window_size):
     parsed_positions = []
     tajimas_ds = []
@@ -62,16 +62,16 @@ def analyze_parsed_sequence(sample_size, segregating_site, base_pair_positions, 
 # The main function
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Chromosome parser.')
-    parser.add_argument(dest='file_name', help='Please enter the VCF file name.')
-    parser.add_argument(dest='window_size', help='Please enter the selected window size.', type=int)
+    parser.add_argument(dest='file_name', help='Please enter the chromosome VCF file.')
+    parser.add_argument(dest='window_size', help='Please enter the window size.', type=int)
     args = parser.parse_args()
-    print('The input VCF file is: ' + str(args.file_name))
-    print('The selected window size is: ' + str(args.window_size))
+    print('The input file is: ' + str(args.file_name))
+    print('The window size is: ' + str(args.window_size))
 
     [Sample_size, Segregating_site, Base_pair_positions, Nucleotide_diversities] = get_info(args.file_name)
     print('The sample size is: ' + str(Sample_size))
     print('The number of segregating site is: ' + str(Segregating_site))
-    print('The true length of this chromosome is: ' + str(Base_pair_positions[-1]))
+    print('The length of the chromosome is: ' + str(Base_pair_positions[-1]))
 
     [Parsed_positions, Tajimas_ds] = analyze_parsed_sequence(
         Sample_size, Segregating_site, Base_pair_positions, Nucleotide_diversities, args.window_size)
