@@ -18,5 +18,5 @@ if __name__ == '__main__':
         data = pd.read_csv(f'Results_iHH12/outfile_{i}.ihh12.out', sep='\t', header=None)
         data.columns = ['a', 'b', 'c', 'd']
         Data = pd.concat([Data, data])
-    Sorted_data = Data.sort_values(by=['d'], ascending=False)
+    Sorted_data = Data.sort_values(by=['d'], ascending=False, ignore_index=True)
     print(Sorted_data.head(args.top))
