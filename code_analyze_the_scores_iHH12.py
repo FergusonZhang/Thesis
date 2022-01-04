@@ -21,7 +21,7 @@ if __name__ == '__main__':
     Sorted_data = Data.sort_values(by=['d'], ascending=False, ignore_index=True)
     Sorted_data = Sorted_data.head(args.top)
 
-    for row in Sorted_data.iterrows():
+    for index, row in Sorted_data.iterrows():
         print(row['a'])
 
     for j in range(1, 9):
