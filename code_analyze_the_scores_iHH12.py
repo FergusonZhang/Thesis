@@ -20,5 +20,11 @@ if __name__ == '__main__':
         Data = pd.concat([Data, data])
     Sorted_data = Data.sort_values(by=['d'], ascending=False, ignore_index=True)
     Sorted_data = Sorted_data.head(args.top)
-    cutoff = Sorted_data.iloc[49, 3]
-    print(cutoff)
+
+    for row in Sorted_data.iterrows():
+        print(row['a'])
+
+    for j in range(1, 9):
+        data = pd.read_csv(f'Results_iHH12/outfile_{j}.ihh12.out', sep='\t', header=None)
+        data.columns = ['a', 'b', 'c', 'd']
+        positions = data['b'].values.tolist()
