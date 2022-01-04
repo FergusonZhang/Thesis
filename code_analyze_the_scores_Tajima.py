@@ -1,6 +1,4 @@
-# This program will determine the cutoff Tajima's D value for the whole genome
-# It will then plot Tajima's D vs. Position figures for all eight chromosomes
-# Finally, it will return the outliers with corresponding positions for each chromosome
+# This program will plot the Tajima's D vs. Position figure as well as return outliers for each chromosome
 import argparse
 import matplotlib.pyplot as plt
 import pickle
@@ -13,7 +11,6 @@ if __name__ == '__main__':
     parser.add_argument(dest='top', help='Please enter the top number.', type=int)
     args = parser.parse_args()
 
-    # Determine the cutoff value
     Scores = []
     for i in range(1, 9):
         infile = open(f'Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_{args.window_size}_scores.pkl', 'rb')
@@ -22,7 +19,7 @@ if __name__ == '__main__':
     Sorted_scores = sorted(Scores, reverse=True)
     Cutoff = Sorted_scores[args.top]
 
-    # Pick outliers and corresponding positions for each chromosome
+    # Pick outliers for each chromosome
     for i in range(1, 9):
         Outlier_positions = []
         Outlier_scores = []
@@ -35,7 +32,7 @@ if __name__ == '__main__':
             if Tajimas_ds[j] > Cutoff:
                 Outlier_positions.append(Parsed_positions[j])
                 Outlier_scores.append(Tajimas_ds[j])
-        with open(f'Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_{args.window_size}_{args.top}_candidates.pkl', 'wb') as p:
+        with open(f'Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_candidates.pkl', 'wb') as p:
             pickle.dump(Outlier_positions, p)
         p.close()
 
