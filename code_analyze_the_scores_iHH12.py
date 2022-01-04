@@ -19,4 +19,6 @@ if __name__ == '__main__':
         data.columns = ['a', 'b', 'c', 'd']
         Data = pd.concat([Data, data])
     Sorted_data = Data.sort_values(by=['d'], ascending=False, ignore_index=True)
-    print(Sorted_data.head(args.top))
+    Sorted_data = Sorted_data.head(args.top)
+    cutoff = Sorted_data.iloc[49, 3]
+    print(cutoff)
