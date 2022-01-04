@@ -6,7 +6,6 @@ import pickle
 import pandas as pd
 from sklearn import preprocessing
 
-
 # The main function
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Outlier analyzer for iHH12.')
@@ -21,8 +20,6 @@ if __name__ == '__main__':
         Data = pd.concat([Data, data])
     Sorted_data = Data.sort_values(by=['d'], ascending=False, ignore_index=True)
     Sorted_data = Sorted_data.head(args.top)
-    Cutoff = Sorted_data.iloc[args.top - 1, 3]
-
     Outliers_1 = []
     Outliers_2 = []
     Outliers_3 = []
@@ -33,7 +30,7 @@ if __name__ == '__main__':
     Outliers_8 = []
     for index, row in Sorted_data.iterrows():
         if row['a'][9] == '1':
-            Outliers_1.append(row['b'])
+            Outliers_1.append([row['b'], row['d']])
         elif row['a'][9] == '2':
             Outliers_2.append(row['b'])
         elif row['a'][9] == '3':
@@ -79,12 +76,10 @@ if __name__ == '__main__':
         Positions = data['b'].values.tolist()
         Scores = data['d'].values.tolist()
         infile = open(f'Results_iHH12/outliers_{j}.ihh12.out.pkl', 'rb')
-        Outlier_positions = pickle.load(infile)
+        Temp = pickle.load(infile)
         infile.close()
-        Outlier_scores = []
-        for index, row in data.iterrows():
-            if row['d'] >= Cutoff:
-                Outlier_scores.append(row['d'])
+        Outlier_positions = [x[0] for x in Temp]
+        Outlier_scores = [y[1] for y in Temp]
         plt.figure(figsize=(40, 5))
         plt.plot(Positions, Scores, Color='blue', linewidth=0.5)
         plt.plot(Outlier_positions, Outlier_scores, 'ro', markersize=2)
