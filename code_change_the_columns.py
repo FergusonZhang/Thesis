@@ -4,11 +4,11 @@ import pandas as pd
 
 if __name__ == '__main__':
     for i in range(1, 9):
-        data = pd.read_csv(f'Data_plink/scaffold_{i}_plink.map', sep='\t', header=None)
-        data.columns = ['a', 'b', 'c', 'd']
+        Data = pd.read_csv(f'Data_plink/scaffold_{i}_plink.map', sep='\t', header=None)
+        Data.columns = ['a', 'b', 'c', 'd']
 
         # Calculate genetic positions assuming a uniform recombination possibility
-        data['a'] = [np.int64(i)] * data.shape[0]
+        Data['a'] = [np.int64(i)]*Data.shape[0]
         if i == 1:
             constant = 1/19624005
         elif i == 2:
@@ -25,5 +25,5 @@ if __name__ == '__main__':
             constant = 1/17328217
         else:
             constant = 1/13362172
-        data['c'] = constant*data['d']
-        data.to_csv(f'Data_plink/modified_scaffold_{i}_plink.map', header=None, index=None, sep='\t')
+        Data['c'] = constant*Data['d']
+        Data.to_csv(f'Data_plink/modified_scaffold_{i}_plink.map', header=None, index=None, sep='\t')
