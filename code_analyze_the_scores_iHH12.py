@@ -21,10 +21,34 @@ if __name__ == '__main__':
     Sorted_data = Data.sort_values(by=['d'], ascending=False, ignore_index=True)
     Sorted_data = Sorted_data.head(args.top)
 
+    Outliers_1 = []
+    Outliers_2 = []
+    Outliers_3 = []
+    Outliers_4 = []
+    Outliers_5 = []
+    Outliers_6 = []
+    Outliers_7 = []
+    Outliers_8 = []
     for index, row in Sorted_data.iterrows():
-        print(row['a'])
+        if row['a'][9] == '1':
+            Outliers_1.append(row['b'])
+        elif row['a'][9] == '2':
+            Outliers_2.append(row['b'])
+        elif row['a'][9] == '3':
+            Outliers_3.append(row['b'])
+        elif row['a'][9] == '4':
+            Outliers_4.append(row['b'])
+        elif row['a'][9] == '5':
+            Outliers_5.append(row['b'])
+        elif row['a'][9] == '6':
+            Outliers_6.append(row['b'])
+        elif row['a'][9] == '7':
+            Outliers_7.append(row['b'])
+        elif row['a'][9] == '8':
+            Outliers_8.append(row['b'])
+    print(Outliers_2)
 
     for j in range(1, 9):
         data = pd.read_csv(f'Results_iHH12/outfile_{j}.ihh12.out', sep='\t', header=None)
         data.columns = ['a', 'b', 'c', 'd']
-        positions = data['b'].values.tolist()
+        Positions = data['b'].values.tolist()
