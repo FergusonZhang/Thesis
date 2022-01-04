@@ -19,5 +19,5 @@ if __name__ == '__main__':
         data.columns = ['a', 'b', 'c', 'd']
         Data = pd.concat([Data, data])
     Data.sort_values(by=['d'], axis=0, ascending=False)
-    Sorted_data = Data.head(50)
+    Sorted_data = Data.head(args.top)
     print(Sorted_data)
