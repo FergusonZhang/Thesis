@@ -83,7 +83,7 @@ if __name__ == '__main__':
         infile.close()
         Outlier_scores = []
         for index, row in data.iterrows():
-            if data['d'] >= Cutoff:
+            if row['d'] >= Cutoff:
                 Outlier_scores.append(data['d'])
         plt.figure(figsize=(40, 5))
         plt.plot(Positions, Scores, Color='blue', linewidth=0.5)
