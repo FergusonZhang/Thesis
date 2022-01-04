@@ -19,7 +19,7 @@ if __name__ == '__main__':
         data.columns = ['a', 'b', 'c', 'd']
         Data = pd.concat([Data, data])
         print(data.head(10))
-        data.sort_values(by=['d'], ascending=False)
+        data.sort_values(by='d', ascending=False)
         print(data.head(10))
     Data.sort_values(by=['d'], ascending=False)
     print(Data)
