@@ -2,9 +2,10 @@
 # It will also return the outliers with corresponding positions for each chromosome
 import argparse
 import matplotlib.pyplot as plt
-import pickle
 import pandas as pd
+import pickle
 from sklearn import preprocessing
+
 
 # The main function
 if __name__ == '__main__':
@@ -20,6 +21,7 @@ if __name__ == '__main__':
         Data = pd.concat([Data, data])
     Sorted_data = Data.sort_values(by=['d'], ascending=False, ignore_index=True)
     Sorted_data = Sorted_data.head(args.top)
+
     Outliers_1 = []
     Outliers_2 = []
     Outliers_3 = []
@@ -69,6 +71,7 @@ if __name__ == '__main__':
     with open(f'Results_iHH12/outliers_8.ihh12.out.pkl', 'wb') as p:
         pickle.dump(Outliers_8, p)
         p.close()
+
     for j in range(1, 9):
         data = pd.read_csv(f'Results_iHH12/outfile_{j}.ihh12.out', sep='\t', header=None)
         data.columns = ['a', 'b', 'c', 'd']
@@ -80,6 +83,8 @@ if __name__ == '__main__':
         infile.close()
         Outlier_positions = [x[0] for x in Temp]
         Outlier_scores = [y[1] for y in Temp]
+
+        # Plot the figure
         plt.figure(figsize=(40, 5))
         plt.plot(Positions, Scores, Color='blue', linewidth=0.5)
         plt.plot(Outlier_positions, Outlier_scores, 'ro', markersize=2)
