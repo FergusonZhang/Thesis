@@ -22,6 +22,7 @@ if __name__ == '__main__':
         Data = pd.concat([Data, data])
     Sorted_data = Data.sort_values(by=['d'], ascending=False, ignore_index=True)
     Sorted_data = Sorted_data.head(args.top)
+    print(Sorted_data)
 
     Outliers_1 = []
     Outliers_2 = []
