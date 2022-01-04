@@ -5,7 +5,7 @@ import pickle
 
 # The main function
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Gene selector.')
+    parser = argparse.ArgumentParser(description="Gene selector for Tajima's D.")
     parser.add_argument(dest='window_size', help='Please enter the parsing window size.', type=int)
     parser.add_argument(dest='top', help='Please enter the top number.', type=int)
     args = parser.parse_args()
