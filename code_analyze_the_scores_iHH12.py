@@ -22,7 +22,6 @@ if __name__ == '__main__':
         Data = pd.concat([Data, data])
     Sorted_data = Data.sort_values(by=['d'], ascending=False, ignore_index=True)
     Sorted_data = Sorted_data.head(args.top)
-    print(Sorted_data)
 
     Outliers_1 = []
     Outliers_2 = []
@@ -78,12 +77,16 @@ if __name__ == '__main__':
         data = pd.read_csv(f'Results_iHH12/outfile_{j}.ihh12.out', sep='\t', header=None)
         data.columns = ['a', 'b', 'c', 'd']
         Positions = data['b'].values.tolist()
+        data['d'] = preprocessing.scale(data['d'])
         Scores = data['d'].values.tolist()
+        infile = open(f'Results_iHH12/outliers_{j}.ihh12.out.pkl', 'rb')
+        Outlier_positions = pickle.load(infile)
+        infile.close()
 
-        # plt.figure(figsize=(40, 5))
-        # plt.plot(Parsed_positions, Tajimas_ds, Color='blue', linewidth=0.5)
+        plt.figure(figsize=(40, 5))
+        plt.plot(Positions, Scores, Color='blue', linewidth=0.5)
         # plt.plot(Outlier_positions, Outlier_scores, 'ro', markersize=2)
-        # plt.title('Balancing Selection Candidate Sites')
-        # plt.xlabel('Base Pair Position')
-        # plt.ylabel("Tajima's D")
-        # plt.savefig(f'Figures/Cgrand_scaffold_{i}_shapeit4.vcf_{args.window_size}_figure.png', dpi=500)
+        plt.title('Balancing Selection Candidate Sites')
+        plt.xlabel('Base Pair Position')
+        plt.ylabel("iHH12")
+        plt.savefig(f'Figures/Cgrand_scaffold_{j}_shapeit4.vcf_iHH12.png', dpi=500)
