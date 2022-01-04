@@ -13,7 +13,7 @@ if __name__ == '__main__':
     parser.add_argument(dest='top', help='Please enter the top number.', type=int)
     args = parser.parse_args()
 
-    Data = pd.DataFrame(['a', 'b', 'c', 'd'])
+    Data = pd.DataFrame()
     for i in range(1, 9):
         data = pd.read_csv(f'Results_iHH12/outfile_{i}.ihh12.out', sep='\t', header=None)
         data.columns = ['a', 'b', 'c', 'd']
