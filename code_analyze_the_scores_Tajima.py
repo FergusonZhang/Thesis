@@ -7,13 +7,12 @@ import pickle
 # The main function
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Outlier analyzer for Tajima's D.")
-    parser.add_argument(dest='window_size', help='Please enter the parsing window size.', type=int)
     parser.add_argument(dest='top', help='Please enter the top number.', type=int)
     args = parser.parse_args()
 
     Scores = []
     for i in range(1, 9):
-        infile = open(f'Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_{args.window_size}_scores.pkl', 'rb')
+        infile = open('Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_scores.pkl', 'rb')
         Scores.extend(pickle.load(infile))
         infile.close()
     Sorted_scores = sorted(Scores, reverse=True)
@@ -23,9 +22,9 @@ if __name__ == '__main__':
     for i in range(1, 9):
         Outlier_positions = []
         Outlier_scores = []
-        infile = open(f'Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_{args.window_size}_positions.pkl', 'rb')
+        infile = open(f'Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_positions.pkl', 'rb')
         Parsed_positions = pickle.load(infile)
-        infile = open(f'Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_{args.window_size}_scores.pkl', 'rb')
+        infile = open(f'Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_scores.pkl', 'rb')
         Tajimas_ds = pickle.load(infile)
         infile.close()
         for j in range(len(Parsed_positions)):
@@ -43,4 +42,4 @@ if __name__ == '__main__':
         plt.title('Balancing Selection Candidate Sites')
         plt.xlabel('Base Pair Position')
         plt.ylabel("Tajima's D")
-        plt.savefig(f'Figures/Cgrand_scaffold_{i}_shapeit4.vcf_{args.window_size}_figure.png', dpi=500)
+        plt.savefig(f'Figures/Cgrand_scaffold_{i}_shapeit4.vcf_Tajima.png', dpi=500)
