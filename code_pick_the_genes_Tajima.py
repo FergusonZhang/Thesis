@@ -10,6 +10,7 @@ if __name__ == '__main__':
     parser.add_argument(dest='top', help='Please enter the top number.', type=int)
     args = parser.parse_args()
 
+    # Load the gene reference file
     db = gffutils.create_db('Data_raw/Crubella_474_v1.1.gene.gff3', 'data.db', force=True, keep_order=True,
                             merge_strategy='merge', sort_attribute_values=True)
     for i in range(1, 9):
@@ -19,6 +20,7 @@ if __name__ == '__main__':
         infile.close()
         print(f'The candidate genes on chromosome {i} are:')
 
+        # Compare the outliers with the reference to select genes
         for gene in db.features_of_type('gene', order_by='start'):
             if gene.seqid == f'scaffold_{i}':
                 for candidate in Candidates:
