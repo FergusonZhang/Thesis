@@ -5,6 +5,7 @@ import argparse
 import matplotlib.pyplot as plt
 import pickle
 import pandas as pd
+from sklearn import preprocessing
 
 
 # The main function
@@ -17,6 +18,7 @@ if __name__ == '__main__':
     for i in range(1, 9):
         data = pd.read_csv(f'Results_iHH12/outfile_{i}.ihh12.out', sep='\t', header=None)
         data.columns = ['a', 'b', 'c', 'd']
+        data['d'] = preprocessing.scale(data['d'])
         Data = pd.concat([Data, data])
     Sorted_data = Data.sort_values(by=['d'], ascending=False, ignore_index=True)
     Sorted_data = Sorted_data.head(args.top)
@@ -46,9 +48,41 @@ if __name__ == '__main__':
             Outliers_7.append(row['b'])
         elif row['a'][9] == '8':
             Outliers_8.append(row['b'])
-    print(Outliers_2)
+    with open(f'Results_iHH12/outliers_1.ihh12.out.pkl', 'wb') as p:
+        pickle.dump(Outliers_1, p)
+        p.close()
+    with open(f'Results_iHH12/outliers_2.ihh12.out.pkl', 'wb') as p:
+        pickle.dump(Outliers_2, p)
+        p.close()
+    with open(f'Results_iHH12/outliers_3.ihh12.out.pkl', 'wb') as p:
+        pickle.dump(Outliers_3, p)
+        p.close()
+    with open(f'Results_iHH12/outliers_4.ihh12.out.pkl', 'wb') as p:
+        pickle.dump(Outliers_4, p)
+        p.close()
+    with open(f'Results_iHH12/outliers_5.ihh12.out.pkl', 'wb') as p:
+        pickle.dump(Outliers_5, p)
+        p.close()
+    with open(f'Results_iHH12/outliers_6.ihh12.out.pkl', 'wb') as p:
+        pickle.dump(Outliers_6, p)
+        p.close()
+    with open(f'Results_iHH12/outliers_7.ihh12.out.pkl', 'wb') as p:
+        pickle.dump(Outliers_7, p)
+        p.close()
+    with open(f'Results_iHH12/outliers_8.ihh12.out.pkl', 'wb') as p:
+        pickle.dump(Outliers_8, p)
+        p.close()
 
     for j in range(1, 9):
         data = pd.read_csv(f'Results_iHH12/outfile_{j}.ihh12.out', sep='\t', header=None)
         data.columns = ['a', 'b', 'c', 'd']
         Positions = data['b'].values.tolist()
+        Scores = data['d'].values.tolist()
+
+        # plt.figure(figsize=(40, 5))
+        # plt.plot(Parsed_positions, Tajimas_ds, Color='blue', linewidth=0.5)
+        # plt.plot(Outlier_positions, Outlier_scores, 'ro', markersize=2)
+        # plt.title('Balancing Selection Candidate Sites')
+        # plt.xlabel('Base Pair Position')
+        # plt.ylabel("Tajima's D")
+        # plt.savefig(f'Figures/Cgrand_scaffold_{i}_shapeit4.vcf_{args.window_size}_figure.png', dpi=500)
