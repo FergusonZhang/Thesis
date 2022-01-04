@@ -77,7 +77,6 @@ if __name__ == '__main__':
         data = pd.read_csv(f'Results_iHH12/outfile_{j}.ihh12.out', sep='\t', header=None)
         data.columns = ['a', 'b', 'c', 'd']
         Positions = data['b'].values.tolist()
-        data['d'] = preprocessing.scale(data['d'])
         Scores = data['d'].values.tolist()
         infile = open(f'Results_iHH12/outliers_{j}.ihh12.out.pkl', 'rb')
         Outlier_positions = pickle.load(infile)
