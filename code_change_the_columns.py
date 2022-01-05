@@ -1,4 +1,4 @@
-# This code is designed to refine plink maps
+# This program will modify original plink maps
 import numpy as np
 import pandas as pd
 
