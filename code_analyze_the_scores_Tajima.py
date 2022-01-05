@@ -3,6 +3,7 @@ import argparse
 import matplotlib.pyplot as plt
 import pickle
 
+
 # The main function
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Outlier analyzer for Tajima's D.")
@@ -17,7 +18,6 @@ if __name__ == '__main__':
     Sorted_scores = sorted(Scores, reverse=True)
     Cutoff = Sorted_scores[args.top]
 
-    # Pick and record outliers
     for i in range(1, 9):
         Outlier_positions = []
         Outlier_scores = []
