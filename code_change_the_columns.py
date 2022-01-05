@@ -5,7 +5,7 @@ import pandas as pd
 
 if __name__ == '__main__':
     for i in range(1, 9):
-        Data = pd.read_csv(f'Data_plink/scaffold_{i}_plink.map', sep='\t', header=None)
+        Data = pd.read_csv(f'Data_plink/Cgrand_scaffold_{i}_shapeit4.vcf_plink.map', sep='\t', header=None)
         Data.columns = ['a', 'b', 'c', 'd']
 
         Data['a'] = [np.int64(i)]*Data.shape[0]
@@ -26,4 +26,4 @@ if __name__ == '__main__':
         else:
             constant = 1/13362172
         Data['c'] = constant*Data['d']
-        Data.to_csv(f'Data_plink/modified_scaffold_{i}_plink.map', header=None, index=None, sep='\t')
+        Data.to_csv(f'Data_plink/Re_Cgrand_scaffold_{i}_shapeit4.vcf_plink.map', header=None, index=None, sep='\t')
