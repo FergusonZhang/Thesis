@@ -3,7 +3,6 @@ import argparse
 import matplotlib.pyplot as plt
 import pickle
 
-
 # The main function
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Outlier analyzer for Tajima's D.")
@@ -12,26 +11,26 @@ if __name__ == '__main__':
 
     Scores = []
     for i in range(1, 9):
-        infile = open('Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_scores.pkl', 'rb')
+        infile = open(f'Data_Tajima/Cgrand_scaffold_{i}_shapeit4.vcf_scores.pkl', 'rb')
         Scores.extend(pickle.load(infile))
         infile.close()
     Sorted_scores = sorted(Scores, reverse=True)
     Cutoff = Sorted_scores[args.top]
 
-    # Pick outliers for each chromosome
+    # Pick and record outliers
     for i in range(1, 9):
         Outlier_positions = []
         Outlier_scores = []
-        infile = open(f'Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_positions.pkl', 'rb')
+        infile = open(f'Data_Tajima/Cgrand_scaffold_{i}_shapeit4.vcf_positions.pkl', 'rb')
         Parsed_positions = pickle.load(infile)
-        infile = open(f'Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_scores.pkl', 'rb')
+        infile = open(f'Data_Tajima/Cgrand_scaffold_{i}_shapeit4.vcf_scores.pkl', 'rb')
         Tajimas_ds = pickle.load(infile)
         infile.close()
         for j in range(len(Parsed_positions)):
             if Tajimas_ds[j] > Cutoff:
                 Outlier_positions.append(Parsed_positions[j])
                 Outlier_scores.append(Tajimas_ds[j])
-        with open(f'Data_pkl/Cgrand_scaffold_{i}_shapeit4.vcf_candidates.pkl', 'wb') as p:
+        with open(f'Data_Tajima/Cgrand_scaffold_{i}_shapeit4.vcf_candidates.pkl', 'wb') as p:
             pickle.dump(Outlier_positions, p)
         p.close()
 
@@ -40,6 +39,6 @@ if __name__ == '__main__':
         plt.plot(Parsed_positions, Tajimas_ds, Color='blue', linewidth=0.5)
         plt.plot(Outlier_positions, Outlier_scores, 'ro', markersize=2)
         plt.title('Balancing Selection Candidate Sites')
-        plt.xlabel('Base Pair Position')
+        plt.xlabel('Position')
         plt.ylabel("Tajima's D")
-        plt.savefig(f'Figures/Cgrand_scaffold_{i}_shapeit4.vcf_Tajima.png', dpi=500)
+        plt.savefig(f'Data_Tajima/Cgrand_scaffold_{i}_shapeit4.vcf_figure.png', dpi=500)
