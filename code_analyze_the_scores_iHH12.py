@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     Data = pd.DataFrame()
     for i in range(1, 9):
-        data = pd.read_csv(f'Data_iHH12/Cgrand_scaffold_{i}_shapeit4.vcf_ihh12.out', sep='\t', header=None)
+        data = pd.read_csv(f'Data_iHH12/Cgrand_scaffold_{i}_shapeit4.vcf.ihh12.out', sep='\t', header=None)
         data.columns = ['a', 'b', 'c', 'd']
         data['d'] = preprocessing.scale(data['d'])
         Data = pd.concat([Data, data])
@@ -73,7 +73,7 @@ if __name__ == '__main__':
         p.close()
 
     for j in range(1, 9):
-        data = pd.read_csv(f'Data_iHH12/Cgrand_scaffold_{j}_shapeit4.vcf_ihh12.out', sep='\t', header=None)
+        data = pd.read_csv(f'Data_iHH12/Cgrand_scaffold_{j}_shapeit4.vcf.ihh12.out', sep='\t', header=None)
         data.columns = ['a', 'b', 'c', 'd']
         data['d'] = preprocessing.scale(data['d'])
         Positions = data['b'].values.tolist()
