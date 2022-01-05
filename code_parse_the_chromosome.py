@@ -62,7 +62,7 @@ def analyze_parsed_sequence(sample_size, segregating_site, base_pair_positions, 
 # The main function
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Chromosome parser.')
-    parser.add_argument(dest='file_name', help='Please enter the chromosome VCF file.')
+    parser.add_argument(dest='file_name', help='Please enter the chromosome file.')
     parser.add_argument(dest='window_size', help='Please enter the window size.', type=int)
     args = parser.parse_args()
     print('The input file is: ' + str(args.file_name))
@@ -76,9 +76,9 @@ if __name__ == '__main__':
     [Parsed_positions, Tajimas_ds] = analyze_parsed_sequence(
         Sample_size, Segregating_site, Base_pair_positions, Nucleotide_diversities, args.window_size)
     print('The number of fragment is: ' + str(len(Tajimas_ds)))
-    with open(f'Data_Tajima/{args.file_name}_positions.pkl', 'wb') as p:
+    with open(f'{args.file_name}_positions.pkl', 'wb') as p:
         pickle.dump(Parsed_positions, p)
     p.close()
-    with open(f'Data_Tajima/{args.file_name}_scores.pkl', 'wb') as s:
+    with open(f'{args.file_name}_scores.pkl', 'wb') as s:
         pickle.dump(Tajimas_ds, s)
     s.close()
