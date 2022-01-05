@@ -26,4 +26,4 @@ if __name__ == '__main__':
         else:
             constant = 1/13362172
         Data['c'] = constant*Data['d']
-        Data.to_csv(f'Data_plink/Re_Cgrand_scaffold_{i}_shapeit4.vcf_plink.map', header=None, index=None, sep='\t')
+        Data.to_csv(f'Data_plink/Cgrand_scaffold_{i}_shapeit4.vcf_re_plink.map', header=None, index=None, sep='\t')
