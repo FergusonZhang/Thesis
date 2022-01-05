@@ -1,5 +1,4 @@
-# This program will plot iHH12 vs. Position figures for all eight chromosomes
-# It will also return the outliers with corresponding positions for each chromosome
+# This program will plot the iHH12 vs. Position figure as well as return outliers for each chromosome
 import argparse
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -15,7 +14,7 @@ if __name__ == '__main__':
 
     Data = pd.DataFrame()
     for i in range(1, 9):
-        data = pd.read_csv(f'Results_iHH12/outfile_{i}.ihh12.out', sep='\t', header=None)
+        data = pd.read_csv(f'Data_iHH12/Cgrand_scaffold_{i}_shapeit4.vcf_ihh12.out', sep='\t', header=None)
         data.columns = ['a', 'b', 'c', 'd']
         data['d'] = preprocessing.scale(data['d'])
         Data = pd.concat([Data, data])
@@ -47,48 +46,49 @@ if __name__ == '__main__':
             Outliers_7.append([row['b'], row['d']])
         elif row['a'][9] == '8':
             Outliers_8.append([row['b'], row['d']])
-    with open(f'Results_iHH12/outliers_1.ihh12.out.pkl', 'wb') as p:
+
+    with open('Data_iHH12/Cgrand_scaffold_1_shapeit4.vcf_ihh12_candidates.pkl', 'wb') as p:
         pickle.dump(Outliers_1, p)
         p.close()
-    with open(f'Results_iHH12/outliers_2.ihh12.out.pkl', 'wb') as p:
+    with open('Data_iHH12/Cgrand_scaffold_2_shapeit4.vcf_ihh12_candidates.pkl', 'wb') as p:
         pickle.dump(Outliers_2, p)
         p.close()
-    with open(f'Results_iHH12/outliers_3.ihh12.out.pkl', 'wb') as p:
+    with open('Data_iHH12/Cgrand_scaffold_3_shapeit4.vcf_ihh12_candidates.pkl', 'wb') as p:
         pickle.dump(Outliers_3, p)
         p.close()
-    with open(f'Results_iHH12/outliers_4.ihh12.out.pkl', 'wb') as p:
+    with open('Data_iHH12/Cgrand_scaffold_4_shapeit4.vcf_ihh12_candidates.pkl', 'wb') as p:
         pickle.dump(Outliers_4, p)
         p.close()
-    with open(f'Results_iHH12/outliers_5.ihh12.out.pkl', 'wb') as p:
+    with open('Data_iHH12/Cgrand_scaffold_5_shapeit4.vcf_ihh12_candidates.pkl', 'wb') as p:
         pickle.dump(Outliers_5, p)
         p.close()
-    with open(f'Results_iHH12/outliers_6.ihh12.out.pkl', 'wb') as p:
+    with open('Data_iHH12/Cgrand_scaffold_6_shapeit4.vcf_ihh12_candidates.pkl', 'wb') as p:
         pickle.dump(Outliers_6, p)
         p.close()
-    with open(f'Results_iHH12/outliers_7.ihh12.out.pkl', 'wb') as p:
+    with open('Data_iHH12/Cgrand_scaffold_7_shapeit4.vcf_ihh12_candidates.pkl', 'wb') as p:
         pickle.dump(Outliers_7, p)
         p.close()
-    with open(f'Results_iHH12/outliers_8.ihh12.out.pkl', 'wb') as p:
+    with open('Data_iHH12/Cgrand_scaffold_8_shapeit4.vcf_ihh12_candidates.pkl', 'wb') as p:
         pickle.dump(Outliers_8, p)
         p.close()
 
     for j in range(1, 9):
-        data = pd.read_csv(f'Results_iHH12/outfile_{j}.ihh12.out', sep='\t', header=None)
+        data = pd.read_csv(f'Data_iHH12/Cgrand_scaffold_{j}_shapeit4.vcf_ihh12.out', sep='\t', header=None)
         data.columns = ['a', 'b', 'c', 'd']
         data['d'] = preprocessing.scale(data['d'])
         Positions = data['b'].values.tolist()
         Scores = data['d'].values.tolist()
-        infile = open(f'Results_iHH12/outliers_{j}.ihh12.out.pkl', 'rb')
+        infile = open(f'Data_iHH12/Cgrand_scaffold_{j}_shapeit4.vcf_ihh12_candidates.pkl', 'rb')
         Temp = pickle.load(infile)
         infile.close()
         Outlier_positions = [x[0] for x in Temp]
         Outlier_scores = [y[1] for y in Temp]
 
-        # Plot the figure
+        # Plot the iHH12 vs. Position figure
         plt.figure(figsize=(40, 5))
         plt.plot(Positions, Scores, Color='blue', linewidth=0.5)
         plt.plot(Outlier_positions, Outlier_scores, 'ro', markersize=2)
         plt.title('Balancing Selection Candidate Sites')
-        plt.xlabel('Base Pair Position')
+        plt.xlabel('Position')
         plt.ylabel("iHH12")
-        plt.savefig(f'Figures/Cgrand_scaffold_{j}_shapeit4.vcf_iHH12.png', dpi=500)
+        plt.savefig(f'Data_iHH12/Cgrand_scaffold_{j}_shapeit4.vcf_ihh12_figure.png', dpi=500)
