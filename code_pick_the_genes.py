@@ -15,16 +15,15 @@ if __name__ == '__main__':
     for i in range(1, 9):
         if args.task_name == "Tajima":
             infile = open(f'Data_Tajima/Cgrand_scaffold_{i}_shapeit4.vcf_candidates.pkl', 'rb')
+            Candidates = pickle.load(infile)
         else:
             infile = open(f'Data_iHH12/Cgrand_scaffold_{i}_shapeit4.vcf_ihh12_candidates.pkl', 'rb')
-        Candidates = pickle.load(infile)
+            Temp = pickle.load(infile)
+            Candidates = [x[0] for x in Temp]
         infile.close()
-
-        # The Crubella data file will function as the reference of genes
         print('The candidates are: ')
         for gene in db.features_of_type('gene', order_by='start'):
             if gene.seqid == f'scaffold_{i}':
                 for candidate in Candidates:
-                    print(candidate)
                     if gene.start <= candidate <= gene.end:
                         print(gene.featuretype, gene.start, gene.end, gene.id)
