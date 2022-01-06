@@ -25,5 +25,6 @@ if __name__ == '__main__':
         for gene in db.features_of_type('gene', order_by='start'):
             if gene.seqid == f'scaffold_{i}':
                 for candidate in Candidates:
+                    print(candidate)
                     if gene.start <= candidate <= gene.end:
                         print(gene.featuretype, gene.start, gene.end, gene.id)
