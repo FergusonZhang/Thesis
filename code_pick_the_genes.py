@@ -21,7 +21,7 @@ if __name__ == '__main__':
             Temp = pickle.load(infile)
             Candidates = [x[0] for x in Temp]
         infile.close()
-        print('The candidates are: ')
+
         for gene in db.features_of_type('gene', order_by='start'):
             if gene.seqid == f'scaffold_{i}':
                 for candidate in Candidates:
