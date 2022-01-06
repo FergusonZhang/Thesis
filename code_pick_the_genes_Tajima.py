@@ -11,9 +11,9 @@ if __name__ == '__main__':
         infile = open(f'Data_Tajima/Cgrand_scaffold_{i}_shapeit4.vcf_candidates.pkl', 'rb')
         Candidates = pickle.load(infile)
         infile.close()
+
         for gene in db.features_of_type('gene', order_by='start'):
             if gene.seqid == f'scaffold_{i}':
                 for candidate in Candidates:
                     if gene.start <= candidate <= gene.end:
                         print(gene.featuretype, gene.start, gene.end, gene.id)
-        print('\n')
