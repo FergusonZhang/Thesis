@@ -85,7 +85,7 @@ if __name__ == '__main__':
         Outlier_scores = [y[1] for y in Temp]
 
         # Plot the iHH12 vs. Position figure
-        plt.figure(figsize=(40, 5))
+        plt.figure(figsize=(25, 5))
         plt.plot(Positions, Scores, Color='blue', linewidth=0.5)
         plt.plot(Outlier_positions, Outlier_scores, 'ro', markersize=2)
         plt.title('Balancing Selection Candidate Sites')
