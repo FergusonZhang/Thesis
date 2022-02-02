@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
         # Plot the Tajima's D vs. Position figure
         plt.figure(figsize=(25, 5))
-        plt.plot(Parsed_positions, Tajimas_ds, Color='blue', linewidth=0.5)
+        plt.plot(Parsed_positions, Tajimas_ds, 'bo', markersize=0.5)
         plt.plot(Outlier_positions, Outlier_scores, 'ro', markersize=2)
         plt.title('Balancing Selection Candidate Sites')
         plt.xlabel('Position')
