@@ -26,8 +26,8 @@ if __name__ == '__main__':
             if mRNA.seqid == f'scaffold_{i}':
                 Starts.append(mRNA.start)
                 Ends.append(mRNA.end)
-        print(Starts)
-        print(Ends)
+        print(len(Starts))
+        print(len(Ends))
 
         Start_scores = []
         count = 0
