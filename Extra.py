@@ -18,8 +18,6 @@ if __name__ == '__main__':
         infile = open(f'Data_Tajima/Cgrand_scaffold_{i}_shapeit4.vcf_scores.pkl', 'rb')
         Scores = pickle.load(infile)
         infile.close()
-        print(len(Positions))
-        print(len(Scores))
 
         Starts = []
         Ends = []
@@ -33,6 +31,7 @@ if __name__ == '__main__':
         for index, position in enumerate(Positions):
             for start in Starts:
                 if (index > 20) and (abs(position - start) <= 200) and (index < len(Positions) - 21):
+                    print("1")
                     fragment = Scores[(index - 20):(index + 21)]
                     zipped_lists = zip(Start_scores, fragment)
                     Start_scores = [x + y for (x, y) in zipped_lists]
@@ -45,6 +44,7 @@ if __name__ == '__main__':
         for index, position in enumerate(Positions):
             for end in Ends:
                 if (index > 20) and (abs(position - end) <= 200) and (end < len(Positions) - 21):
+                    print("1")
                     fragment = Scores[(index - 20):(index + 20)]
                     zipped_lists = zip(End_scores, fragment)
                     End_scores = [x + y for (x, y) in zipped_lists]
