@@ -13,7 +13,7 @@ if __name__ == '__main__':
     db = gffutils.create_db('Data_raw/Crubella_474_v1.1.gene.gff3', 'data.db', force=True, keep_order=True,
                             merge_strategy='merge', sort_attribute_values=True)
 
-    for i in range(1, 2):
+    for i in range(1, 9):
         infile = open(f'Data_Tajima/Cgrand_scaffold_{i}_shapeit4.vcf_positions.pkl', 'rb')
         Positions = pickle.load(infile)
         infile.close()
@@ -58,7 +58,7 @@ if __name__ == '__main__':
         plt.savefig(f'Chromosome_{i}_start', dpi=500)
 
         x_values = list(range(1, len(End_scores) + 1))
-        plt.plot(x_values, End_scores, 'bo', markersize=1)
+        plt.plot(x_values, End_scores, 'ro', markersize=1)
         plt.xlabel('Position')
         plt.ylabel("Tajima's D")
         plt.savefig(f'Chromosome_{i}_end', dpi=500)
