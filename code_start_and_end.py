@@ -29,23 +29,23 @@ if __name__ == '__main__':
                 Starts.append(mRNA.start)
                 Ends.append(mRNA.end)
 
-        Start_scores = np.zeros(100)
+        Start_scores = np.zeros(40)
         count = 0
         for index, position in enumerate(Positions):
             for start in Starts:
-                if (index > 50) and (abs(position - start) <= 100) and (index < len(Positions) - 51):
-                    fragment = Scores[(index - 50):(index + 51)]
+                if (index > 20) and (abs(position - start) <= 100) and (index < len(Positions) - 21):
+                    fragment = Scores[(index - 20):(index + 21)]
                     zipped_lists = zip(Start_scores, fragment)
                     Start_scores = [x + y for (x, y) in zipped_lists]
                     count += 1
         Start_scores = [number/count for number in Start_scores]
 
-        End_scores = np.zeros(100)
+        End_scores = np.zeros(40)
         count = 0
         for index, position in enumerate(Positions):
             for end in Ends:
-                if (index > 50) and (abs(position - end) <= 100) and (end < len(Positions) - 51):
-                    fragment = Scores[(index - 50):(index + 51)]
+                if (index > 20) and (abs(position - end) <= 100) and (end < len(Positions) - 21):
+                    fragment = Scores[(index - 20):(index + 21)]
                     zipped_lists = zip(End_scores, fragment)
                     End_scores = [x + y for (x, y) in zipped_lists]
                     count += 1
