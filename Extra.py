@@ -30,9 +30,9 @@ if __name__ == '__main__':
         count = 0
         for index, position in enumerate(Positions):
             for start in Starts:
-                if (index > 20) and (abs(position - start) <= 200) and (index < len(Positions) - 21):
-                    print("1")
+                if (index > 20) and (abs(position - start) <= 100) and (index < len(Positions) - 21):
                     fragment = Scores[(index - 20):(index + 21)]
+                    print(fragment)
                     zipped_lists = zip(Start_scores, fragment)
                     Start_scores = [x + y for (x, y) in zipped_lists]
                     count += 1
@@ -43,9 +43,9 @@ if __name__ == '__main__':
         count = 0
         for index, position in enumerate(Positions):
             for end in Ends:
-                if (index > 20) and (abs(position - end) <= 200) and (end < len(Positions) - 21):
-                    print("1")
+                if (index > 20) and (abs(position - end) <= 100) and (end < len(Positions) - 21):
                     fragment = Scores[(index - 20):(index + 20)]
+                    print(fragment)
                     zipped_lists = zip(End_scores, fragment)
                     End_scores = [x + y for (x, y) in zipped_lists]
                     count += 1
