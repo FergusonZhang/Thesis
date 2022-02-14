@@ -12,7 +12,7 @@ if __name__ == '__main__':
     db = gffutils.create_db('Data_raw/Crubella_474_v1.1.gene.gff3', 'data.db', force=True, keep_order=True,
                             merge_strategy='merge', sort_attribute_values=True)
 
-    for i in range(1, 9):
+    for i in range(1, 2):
         infile = open(f'Data_Tajima/Cgrand_scaffold_{i}_shapeit4.vcf_positions.pkl', 'rb')
         Positions = pickle.load(infile)
         infile.close()
@@ -32,11 +32,12 @@ if __name__ == '__main__':
         for index, position in enumerate(Positions):
             for start in Starts:
                 if (index > 20) and (abs(position - start) <= 50) and (index < len(Positions) - 21):
-                    fragment = Scores[(index - 20):(index + 20)]
+                    fragment = Scores[(index - 20):(index + 21)]
                     zipped_lists = zip(Start_scores, fragment)
                     Start_scores = [x + y for (x, y) in zipped_lists]
                     count += 1
         Start_scores = [number/count for number in Start_scores]
+        print(Start_scores)
 
         End_scores = []
         count = 0
@@ -48,6 +49,7 @@ if __name__ == '__main__':
                     End_scores = [x + y for (x, y) in zipped_lists]
                     count += 1
         End_scores = [number/count for number in End_scores]
+        print(End_scores)
 
         size = len(Start_scores)
         x_values = list(range(1, size + 1))
