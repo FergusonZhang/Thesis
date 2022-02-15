@@ -29,6 +29,7 @@ if __name__ == '__main__':
     Outliers_6 = []
     Outliers_7 = []
     Outliers_8 = []
+
     for index, row in Sorted_data.iterrows():
         if row['a'][9] == '1':
             Outliers_1.append([row['b'], row['d']])
@@ -87,8 +88,7 @@ if __name__ == '__main__':
         # Plot the iHH12 vs. Position figure
         plt.figure(figsize=(15, 5))
         plt.plot(Positions, Scores, 'bo', markersize=0.5)
-        # plt.plot(Outlier_positions, Outlier_scores, 'ro', markersize=2)
-        plt.title('Balancing Selection Candidate Sites')
-        plt.xlabel('Position')
+        plt.xlabel('Position (10^7 base pair)')
         plt.ylabel("iHH12")
+        plt.ylim([0, 60])
         plt.savefig(f'Data_iHH12/Cgrand_scaffold_{j}_shapeit4.vcf_ihh12_figure.png', dpi=500)
