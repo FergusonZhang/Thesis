@@ -13,7 +13,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     db = gffutils.create_db('Data_raw/Crubella_474_v1.1.gene.gff3', 'data.db', force=True, keep_order=True,
                             merge_strategy='merge', sort_attribute_values=True)
-    for i in range(1, 2):
+    for i in range(1, 9):
         infile = open(f'Data_extra/Cgrand_scaffold_{i}_shapeit4.vcf_positions.pkl', 'rb')
         Positions = pickle.load(infile)
         infile.close()
