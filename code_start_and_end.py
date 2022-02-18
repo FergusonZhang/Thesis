@@ -33,11 +33,11 @@ if __name__ == '__main__':
         Gene_scores = np.zeros(4000)
         for index, position in enumerate(Positions):
             for gene in Genes:
-                if (index > 2000) and (abs(position - gene) <= 10) and (index < len(Positions) - 2001):
+                if (index > 2000) and (abs(position - gene) <= 50) and (index < (len(Positions) - 2001)):
                     fragment_position = Positions[(index - 2000):(index + 2001)]
                     fragment_score = Scores[(index - 2000):(index + 2001)]
                     for point, element in enumerate(fragment_position):
-                        if (point < position - 2000) or (point > position + 2000):
+                        if (element < (position - 2000)) or (element > (position + 2000)):
                             fragment_score[point] = 0
                     zipped_lists = zip(Gene_scores, fragment_score)
                     Gene_scores = [x + y for (x, y) in zipped_lists]
