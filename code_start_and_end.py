@@ -46,4 +46,4 @@ if __name__ == '__main__':
         plt.plot(x_values, Gene_scores, 'bo', markersize=1)
         plt.xlabel('Position')
         plt.ylabel("Tajima's D")
-        plt.savefig(f'Chromosome_{i}_{args.name}', dpi=500)
+        plt.savefig(f'Data_extra/Chromosome_{i}_{args.name}', dpi=500)
