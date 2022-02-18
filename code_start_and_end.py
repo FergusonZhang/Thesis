@@ -8,57 +8,42 @@ import pickle
 
 # The main function
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='?')
+    parser = argparse.ArgumentParser(description='Start or end analysis.')
+    parser.add_argument(dest='name', help='Please enter start or end.')
     args = parser.parse_args()
     db = gffutils.create_db('Data_raw/Crubella_474_v1.1.gene.gff3', 'data.db', force=True, keep_order=True,
                             merge_strategy='merge', sort_attribute_values=True)
-
-    for i in range(1, 9):
-        infile = open(f'Data_Tajima/Cgrand_scaffold_{i}_shapeit4.vcf_positions.pkl', 'rb')
+    for i in range(1, 2):
+        infile = open(f'Data_extra/Cgrand_scaffold_{i}_shapeit4.vcf_positions.pkl', 'rb')
         Positions = pickle.load(infile)
         infile.close()
-
-        infile = open(f'Data_Tajima/Cgrand_scaffold_{i}_shapeit4.vcf_scores.pkl', 'rb')
+        infile = open(f'Data_extra/Cgrand_scaffold_{i}_shapeit4.vcf_scores.pkl', 'rb')
         Scores = pickle.load(infile)
         infile.close()
 
-        Starts = []
-        Ends = []
-        for mRNA in db.features_of_type('mRNA', order_by='start'):
-            if mRNA.seqid == f'scaffold_{i}':
-                Starts.append(mRNA.start)
-                Ends.append(mRNA.end)
-
-        Start_scores = np.zeros(40)
-        count = 0
+        Genes = []
+        if args.name == 'start':
+            for mRNA in db.features_of_type('mRNA', order_by='start'):
+                if mRNA.seqid == f'scaffold_{i}':
+                    Genes.append(mRNA.start)
+        elif args.name == 'end':
+            for mRNA in db.features_of_type('mRNA', order_by='end'):
+                if mRNA.seqid == f'scaffold_{i}':
+                    Genes.append(mRNA.end)
+        Gene_scores = np.zeros(4000)
         for index, position in enumerate(Positions):
-            for start in Starts:
-                if (index > 20) and (abs(position - start) <= 100) and (index < len(Positions) - 21):
-                    fragment = Scores[(index - 20):(index + 21)]
-                    zipped_lists = zip(Start_scores, fragment)
-                    Start_scores = [x + y for (x, y) in zipped_lists]
-                    count += 1
-        Start_scores = [number/count for number in Start_scores]
-
-        End_scores = np.zeros(40)
-        count = 0
-        for index, position in enumerate(Positions):
-            for end in Ends:
-                if (index > 20) and (abs(position - end) <= 100) and (end < len(Positions) - 21):
-                    fragment = Scores[(index - 20):(index + 21)]
-                    zipped_lists = zip(End_scores, fragment)
-                    End_scores = [x + y for (x, y) in zipped_lists]
-                    count += 1
-        End_scores = [number/count for number in End_scores]
-
-        x_values = list(range(1, len(Start_scores) + 1))
-        plt.plot(x_values, Start_scores, 'bo', markersize=1)
+            for gene in Genes:
+                if (index > 2000) and (abs(position - gene) <= 10) and (index < len(Positions) - 2001):
+                    fragment_position = Positions[(index - 2000):(index + 2001)]
+                    fragment_score = Scores[(index - 2000):(index + 2001)]
+                    for point, element in enumerate(fragment_position):
+                        if (point < position - 2000) or (point > position + 2000):
+                            fragment_score[point] = 0
+                    zipped_lists = zip(Gene_scores, fragment_score)
+                    Gene_scores = [x + y for (x, y) in zipped_lists]
+        Gene_scores = [number/4000 for number in Gene_scores]
+        x_values = list(range(1, len(Gene_scores) + 1))
+        plt.plot(x_values, Gene_scores, 'bo', markersize=1)
         plt.xlabel('Position')
         plt.ylabel("Tajima's D")
-        plt.savefig(f'Chromosome_{i}_start', dpi=500)
-
-        x_values = list(range(1, len(End_scores) + 1))
-        plt.plot(x_values, End_scores, 'ro', markersize=1)
-        plt.xlabel('Position')
-        plt.ylabel("Tajima's D")
-        plt.savefig(f'Chromosome_{i}_end', dpi=500)
+        plt.savefig(f'Chromosome_{i}_{args.name}', dpi=500)
