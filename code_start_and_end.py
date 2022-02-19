@@ -13,7 +13,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     db = gffutils.create_db('Data_raw/Crubella_474_v1.1.gene.gff3', 'data.db', force=True, keep_order=True,
                             merge_strategy='merge', sort_attribute_values=True)
-    for i in range(1, 9):
+
+    for i in range(1, 2):
         infile = open(f'Data_extra/Cgrand_scaffold_{i}_shapeit4.vcf_positions.pkl', 'rb')
         Positions = pickle.load(infile)
         infile.close()
@@ -30,19 +31,28 @@ if __name__ == '__main__':
             for mRNA in db.features_of_type('mRNA', order_by='end'):
                 if mRNA.seqid == f'scaffold_{i}':
                     Genes.append(mRNA.end)
+        for gene in Genes:
+            gene = gene - 4000
+            if gene < Positions[0]:
+                Genes.remove(gene)
+
         Gene_scores = np.zeros(4000)
+        fragment_score = np.zeros(4000)
         for index, position in enumerate(Positions):
-            for gene in Genes:
-                if (index > 2000) and (abs(position - gene) <= 50) and (index < (len(Positions) - 2001)):
-                    fragment_position = Positions[(index - 2000):(index + 2001)]
-                    fragment_score = Scores[(index - 2000):(index + 2001)]
-                    for point, element in enumerate(fragment_position):
-                        if (element < (position - 2000)) or (element > (position + 2000)):
-                            fragment_score[point] = 0
+            if index < (len(Positions) - 4000):
+                for gene in Genes:
+                    if 0 <= (position - gene) <= 25:
+                        point = index
+                        while Positions(point) <= (gene + 4000):
+                            location = Positions(point) - gene
+                            fragment_score[location] = Scores(point)
+                            point += 1
                     zipped_lists = zip(Gene_scores, fragment_score)
                     Gene_scores = [x + y for (x, y) in zipped_lists]
+                    fragment_score = np.zeros(4000)
         Gene_scores = [number/4000 for number in Gene_scores]
-        x_values = list(range(1, len(Gene_scores) + 1))
+
+        x_values = list(range(-2000, 2000))
         plt.plot(x_values, Gene_scores, 'bo', markersize=1)
         plt.xlabel('Position')
         plt.ylabel("Tajima's D")
