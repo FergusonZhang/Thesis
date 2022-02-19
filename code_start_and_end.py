@@ -31,9 +31,9 @@ if __name__ == '__main__':
             for mRNA in db.features_of_type('mRNA', order_by='end'):
                 if mRNA.seqid == f'scaffold_{i}':
                     Genes.append(mRNA.end)
+        Genes = [gene - 4000 for gene in Genes]
         for gene in Genes:
-            gene = gene - 4000
-            if gene < Positions[0]:
+            if gene <= Positions[0]:
                 Genes.remove(gene)
 
         Gene_scores = np.zeros(4000)
