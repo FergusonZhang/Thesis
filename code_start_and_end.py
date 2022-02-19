@@ -45,6 +45,7 @@ if __name__ == '__main__':
                         point = index
                         while Positions[point] <= (gene + 4000):
                             location = Positions[point] - gene
+                            print(location)
                             fragment_score[location] = Scores[point]
                             point += 1
                     zipped_lists = zip(Gene_scores, fragment_score)
