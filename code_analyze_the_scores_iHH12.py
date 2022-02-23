@@ -87,7 +87,7 @@ if __name__ == '__main__':
 
         # Plot the iHH12 vs. Position figure
         plt.figure(figsize=(15, 5))
-        plt.plot(Positions, Scores, 'bo', markersize=0.5)
+        plt.plot(Positions, Scores, 'bo', markersize=1.5)
         plt.xlabel('Position (10^7 base pair)')
         plt.ylabel("iHH12")
         plt.ylim([0, 60])
