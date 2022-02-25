@@ -1,4 +1,4 @@
-# An interesting extra work
+# An interesting extra work, not part of the undergraduate thesis
 import argparse
 import gffutils
 import matplotlib.pyplot as plt
