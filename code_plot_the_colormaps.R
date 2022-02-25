@@ -7,7 +7,6 @@ plotHaplotypes <- function(filename)
   data<-as.matrix(read.table(filename.der))
   rawData<-read.table(filename)
 
-
   print("Plotting EHH decay...")
   setEPS()
   postscript(file=paste(filename,".ehh.eps",sep=""))
