@@ -1,0 +1,29 @@
+\documentclass{rhitbio}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{natbib}
+\usepackage{graphicx}
+\graphicspath{{figs/}}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{hyperref}      
+\usepackage{cleveref}  
+\usepackage{appendix}
+\usepackage[color=pink, enable]{todonotes}
+\crefformat{figure}{\protect{\bfseries{Fig. ~#2#1#3}}}
+\Crefformat{table}{\protect{\bfseries{Table ~#2#1#3}}}
+
+\begin{document}
+\setcounter{secnumdepth}{0}
+\input{front_matter.tex}
+
+\newpage
+\input{main_text.tex}
+
+\newpage
+\bibliographystyle{genetics.bst}
+\bibliography{references.bib}
+
+\newpage
+\input{appendices}
+\end{document}
