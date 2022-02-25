@@ -35,10 +35,10 @@ It will take the EHH output files and plot the EHH decay curve as well as the ha
 
 ## Results
 
-All the information used in the thesis are included in the Results folder. It contains three subfolders
+All the analysis results of the thesis are included in the Results folder. It contains three subfolders
 that record all the plots, as well as two Excels, one has gene candidates and functions, the other
-is the result of the GO enrichment analysis.
+has the result of the GO enrichment analysis.
 
 ## Writings
 
-The LaTeX of the thesis can be found in the Writings folder. The LaTeX template is provided by Dr. Williamson.
+The LaTeX files of the thesis are included in the Writings folder. The LaTeX template is provided by Dr. Williamson.
