@@ -1,7 +1,6 @@
 conda activate thesis
 cd Thesis/
 git pull
-
 cd Data_raw/
 gzip -d Cgrand_scaffold_1_shapeit4.vcf.gz &
 gzip -d Cgrand_scaffold_2_shapeit4.vcf.gz &
