@@ -146,6 +146,5 @@ plotHaplotypes <- function(filename)
   mtext("Ancestral",2,at= (numHaps + (padding+1) + numHaps2/2 ) )
 
   dev.off()
-
   return
 }
